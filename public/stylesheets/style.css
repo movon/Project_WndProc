@@ -1,0 +1,23 @@
+body {
+    padding: 50px;
+    font: 24px "Lucida Grande", Helvetica, Arial, sans-serif;
+    background-image: url("/images/xpbg.jpg");
+    background-size:cover;
+}
+
+#nav ul li ,#nav ul li a{
+    display:inline;
+    padding-right:1%;
+    color:orange;
+    font-size:50px;
+    text-decoration:none;
+    list-style-type: none;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+
+}
+.active,#nav ul li a:hover{
+    background-color:#D3D3D3;
+    color:orangered;
+}

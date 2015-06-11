@@ -14,6 +14,7 @@ var chat = require('./routes/chat');
 var adduser = require('./routes/adduser');
 var login = require('./routes/login');
 var logout= require('./routes/logout');
+var adminpanel = require('./routes/adminpanel');
 var app = express();
 
 
@@ -30,6 +31,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
 var token = crypto.randomBytes(64).toString('hex');
 
+getExtra = function(req){
+    extra = '';
+    if(req.session.username != null){
+        extra += '<li><a href="/chat">Chat</a></li>';
+        extra += '<li><a href="/logout">Log Out</a></li>';
+        if(req.session.privileges == 'admin'){
+            extra += '<li><a href="/adminpanel">Admin Panel</a></li>';
+        }
+    }
+    else{
+        extra += '<li><a href="/register">Register</a></li>';
+        extra +=  '<li><a href="/login">Log in</a></li>';
+    }
+    return extra
+}
 
 
 app.use(session({
@@ -47,6 +63,7 @@ app.use('/register', register);
 app.use('/adduser', adduser);
 app.use('/login', login);
 app.use('/logout', logout);
+app.use('/adminpanel', adminpanel);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -54,7 +71,9 @@ app.use(function(req, res, next) {
   err.status = 404;
     var errorid = 404;
     res.status(err.status || 404);
-    res.render('notfound404', { title: 'Not Found' });
+    var extra = getExtra(req);
+    res.render('notfound404', { title: 'Not Found' , req:req, extra:extra, username: req.session.username});
+
   //next(err);
 });
 

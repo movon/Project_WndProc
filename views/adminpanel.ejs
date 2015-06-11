@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+
+<% include templates/header.ejs%>
+
+<h1><%= title%></h1>
+
+<p>Admin Panel</p>
+<table id = 'ut'>
+
+</table>
+<script>
+    var usersTable = <%- JSON.stringify(userTable)%>
+    document.getElementById('ut').innerHTML=usersTable;
+</script>
+</body>
+</html>

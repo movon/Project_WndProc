@@ -3,6 +3,7 @@
 <head>
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 <body>
 
@@ -16,7 +17,7 @@
         document.getElementById('errors').innerHTML=err;
     </script>
 </ul>
-<form action="http://149.78.95.151:80/adduser" method="post">
+<form action="/adduser" method="post">
     <table>
         <tr>
             <td>Username: </td>
@@ -31,8 +32,12 @@
             <td><input type="text" name="email"><td>
         </tr>
         <tr>
+            <td><div class="g-recaptcha" data-sitekey="6Lf1SAgTAAAAAHhm6dgKkwvRI4uTkjeGwrmq5SXL"></div></td>
+        </tr>
+        <tr>
             <td><input type="submit" name="sumbit"></td>
         </tr>
+
     </table>
 </form>
 

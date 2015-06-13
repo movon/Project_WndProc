@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var crypto = require('crypto');
-
+var favicon = require('serve-favicon');
 var register = require('./routes/register');
 var routes = require('./routes/index');
 var about = require('./routes/about');
@@ -23,7 +23,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
+//app.use(favicon(__dirname + '/public/images/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -45,7 +45,7 @@ getExtra = function(req){
         extra +=  '<li><a href="/login">Log in</a></li>';
     }
     return extra
-}
+};
 
 
 app.use(session({
@@ -53,7 +53,7 @@ app.use(session({
     name: 'sessionID',
     proxy: true,
     resave: true,
-    saveUninitialized: true,
+    saveUninitialized: true
 }));
 app.use('/', routes);
 app.use('/about', about);

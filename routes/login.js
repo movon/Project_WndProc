@@ -21,7 +21,6 @@ var pool      =    mysql.createPool({
 });
 
 router.post('/', function(req, res, next) {
-    extra = getExtra(req);
     pool.getConnection(function(err,connection){
         if (err) {
             connection.release();
@@ -29,6 +28,7 @@ router.post('/', function(req, res, next) {
             return;
         }
         else {
+            extra = getExtra(req);
             username = req.body.username;
             password = req.body.password;
             if(username.indexOf("'")>-1 || password.indexOf("'")>-1){
@@ -36,13 +36,27 @@ router.post('/', function(req, res, next) {
                 return;
             }
 
-            connection.query("select * from users where username='" + username + "' and password='" + password + "';", function (err, rows) {
-                connection.release();
+            connection.query("select * from users where username='" + username + "';", function (err, rows) {
                 if (!err) {
                     if (rows == 0) {
                         res.render('login', {title: 'Invalid username or password!', extra:extra, username:req.session.username});
                     }
                     else {
+                        console.log(rows);
+                        var salt = rows[0]['salt'];
+                        var saltpassword =  password + salt;
+                        var hashedpassword = crypto.createHash('md5').update(saltpassword).digest('hex');
+
+                        if(rows[0]['hashed'] != hashedpassword) {
+                            res.render('login', {
+                                title: 'Invalid username or password!',
+                                extra: extra,
+                                username: req.session.username
+                            });
+                            return;
+                        }
+
+
                         req.session.username = rows[0]['username'];
                         req.session.privileges = (rows[0]['privileges']);
                         res.redirect('/');

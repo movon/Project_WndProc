@@ -1,9 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var validator = require('validator');
-var querystring = require('querystring');
 var http = require('http');
 var https = require('https');
+var crypto = require('crypto');
+
 
 function sendToGoogle(userIP, recaptcha) {
     console.log("Sent to google");
@@ -88,16 +89,23 @@ router.post('/', function(req, res, next){
                             });
                             return;
                         }
-                        console.log("insert into users(username, password, email, privileges) values('" + req.body.username + "','" + req.body.password + "','" + req.body.email + "'," + "'user');");
-                        connection.query("insert into users(username, password, email, privileges) values('" + req.body.username + "','" + req.body.password + "','" + req.body.email + "'," + "'user');", function (err, rows) {
+                        var salt = crypto.randomBytes(32).toString('hex');
+                        var saltpassword =  req.body.password + salt;
+                        var hashedpassword = crypto.createHash('md5').update(saltpassword).digest('hex');
+                        console.log("insert into users(username, hashed, email, privileges, salt) values('" + req.body.username + "','" + hashedpassword + "','" + req.body.email + "'," + "'user','" + salt + "');");
+                        connection.query("insert into users(username, hashed, email, privileges, salt) values('" + req.body.username + "','" + hashedpassword + "','" + req.body.email + "'," + "'user','" + salt + "');", function (err, rows) {
                             connection.release();
+                            console.log("released connection");
                             if (!err) {
+                                console.log("sent him thank you");
                                 res.render('adduser', {
                                     title: 'Thank you for signing up to our website!',
                                     extra: extra,
                                     username: req.session.username
                                 });
                             }
+                            else
+                                console.log(err);
                         });
 
                     });

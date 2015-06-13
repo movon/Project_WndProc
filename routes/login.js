@@ -42,7 +42,6 @@ router.post('/', function(req, res, next) {
                         res.render('login', {title: 'Invalid username or password!', extra:extra, username:req.session.username});
                     }
                     else {
-                        console.log(rows);
                         var salt = rows[0]['salt'];
                         var saltpassword =  password + salt;
                         var hashedpassword = crypto.createHash('md5').update(saltpassword).digest('hex');

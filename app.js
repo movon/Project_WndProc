@@ -15,6 +15,8 @@ var adduser = require('./routes/adduser');
 var login = require('./routes/login');
 var logout= require('./routes/logout');
 var adminpanel = require('./routes/adminpanel');
+var userpanel = require('./routes/userpanel');
+var changepassword = require('./routes/changepassword');
 var app = express();
 
 
@@ -36,6 +38,7 @@ getExtra = function(req){
     if(req.session.username != null){
         extra += '<li><a href="/chat">Chat</a></li>';
         extra += '<li><a href="/logout">Log Out</a></li>';
+        extra += '<li><a href="/userpanel">User Panel</a></li>';
         if(req.session.privileges == 'admin'){
             extra += '<li><a href="/adminpanel">Admin Panel</a></li>';
         }
@@ -64,7 +67,8 @@ app.use('/adduser', adduser);
 app.use('/login', login);
 app.use('/logout', logout);
 app.use('/adminpanel', adminpanel);
-
+app.use('/userpanel', userpanel);
+app.use('/changepassword', changepassword);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

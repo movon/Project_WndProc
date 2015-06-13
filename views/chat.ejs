@@ -21,7 +21,7 @@
 <script>
     height = window.innerHeight;
 </script>
-<div id="chat_viewport" style="overflow:auto">
+<div id="chat_viewport" style="overflow:auto; color: deepskyblue; background-image: url('images/chatbg.jpg')">
     <ul id="messages"></ul>
 </div>
 <form action="" style="margin-top: 20px;">
@@ -30,9 +30,26 @@
 <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
 <script>
+    putZeroesBefore = function(time){
+        while (time.length<2)
+            time = "0" + time;
+        return time;
+    }
+
+    var username = <%- JSON.stringify(username)%>
+    console.log(username);
+    var date = new Date;
+    date.setTime(date.getTime());
+
+    var seconds = putZeroesBefore(date.getSeconds());
+    var minutes = putZeroesBefore(date.getMinutes());
+    var hour = putZeroesBefore(date.getHours());
+    var timeString = "<"+hour+":"+minutes+":"+seconds+">";
     var socket = io();
     $('form').submit(function(){
-        socket.emit('chat message', $('#m').val());
+        var chatmsg = $('#m').val();
+        if(chatmsg.length > 1)
+            socket.emit('chat message', timeString + " " + username + ":  " + chatmsg);
         $('#m').val('');
         var chat_height = $('#messages').outerHeight();
         $('#chat_viewport').scrollTop(chat_height);

@@ -27,8 +27,6 @@ app.set('port', port);
 /**
  * Listen on provided port, on all network interfaces.
  */
-io.emit('some event', { for: 'everyone' });
-
 
 io.on('connection', function(socket){
   socket.on('chat message', function(msg){

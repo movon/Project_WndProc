@@ -43,13 +43,16 @@ router.get('/', function(req, res, next) {
 
 
 var mysql = require('mysql');
-mypass = 'winasmfspopaw256!';
+
+var dbusername = 'root';
+var dbpassword = 'winasmfspopaw256!';
+var dbhost = 'localhost';
 
 var pool      =    mysql.createPool({
     connectionLimit : 100, //important
-    host     : '149.78.95.151',
-    user     : 'talbor49',
-    password : mypass,
+    host     : dbhost,
+    user     : dbusername,
+    password : dbpassword,
     database : 'userlogin',
     debug    :  false
 });
@@ -125,7 +128,7 @@ router.post('/', function(req, res, next){
 
 
     });
-var SECRET = "6Lf1SAgTAAAAAGNkmjOGq7xLsbdWOXam24udQmgO";
+var SECRET = "6Ld-IQoTAAAAAJ_XyAF6r9lYeI3xyBI_FF7B_94D";
 
 // Helper function to make API call to recatpcha and check response
 function verifyRecaptcha(key, callback) {

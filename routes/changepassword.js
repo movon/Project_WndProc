@@ -3,13 +3,16 @@ var router = express.Router();
 var crypto = require('crypto');
 
 var mysql = require('mysql');
-mypass = 'winasmfspopaw256!';
+
+var dbusername = 'root';
+var dbpassword = 'winasmfspopaw256!';
+var dbhost = 'localhost';
 
 var pool      =    mysql.createPool({
     connectionLimit : 100, //important
-    host     : '149.78.95.151',
-    user     : 'talbor49',
-    password : mypass,
+    host     : dbhost,
+    user     : dbusername,
+    password : dbpassword,
     database : 'userlogin',
     debug    :  false
 });
@@ -22,7 +25,6 @@ router.post('/', function(req, res, next) {
             connection.release();
             console.log("Error in creating connection to database: " + err);
             res.json({"code": 100, "status": "Error in connection database"});
-            return;
         }
         else {
             username = req.session.username;
@@ -46,9 +48,9 @@ router.post('/', function(req, res, next) {
                         return;
                     }
                     var newpass = req.body.password;
-                    var salt = rows[0]['salt'];
+                    salt = rows[0]['salt'];
                     saltpassword = newpass + salt;
-                    var hashedpassword = crypto.createHash('md5').update(saltpassword).digest('hex');
+                    hashedpassword = crypto.createHash('md5').update(saltpassword).digest('hex');
 
                     connection.query("UPDATE users SET hashed=" + "'" + hashedpassword + "'" + " where username='" + username + "';", function (err, rows) {
                         if(err)

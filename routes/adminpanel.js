@@ -9,13 +9,16 @@ router.get('/', function(req, res, next) {
         return;
     }
     var mysql = require('mysql');
-    mypass = 'winasmfspopaw256!';
+
+    var dbusername = 'root';
+    var dbpassword = 'winasmfspopaw256!';
+    var dbhost = 'localhost';
 
     var pool      =    mysql.createPool({
         connectionLimit : 100, //important
-        host     : '149.78.95.151',
-        user     : 'talbor49',
-        password : mypass,
+        host     : dbhost,
+        user     : dbusername,
+        password : dbpassword,
         database : 'userlogin',
         debug    :  false
     });

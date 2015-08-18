@@ -28,7 +28,7 @@ html,
 body {
     padding: 50px;
     font: 24px "Lucida Grande", Helvetica, Arial, sans-serif;
-    background-image: url("http://www.wallpaperup.com/uploads/wallpapers/2013/08/02/126826/57cdd9b81573a02e5c5540ac4b26ac9c.jpg");
+    background-image: url("/images/bg2.jpg");
     background-size:cover;
 }
 body {

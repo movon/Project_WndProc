@@ -23,6 +23,7 @@
     "q": "^1.0.1",
     "crypto": "latest",
     "validator": "latest",
-    "mysql": "latest"
+    "mysql": "latest",
+    "pg": "4.x"
   }
 }

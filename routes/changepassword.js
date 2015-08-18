@@ -1,29 +1,15 @@
 var express = require('express');
 var router = express.Router();
 var crypto = require('crypto');
-
-var mysql = require('mysql');
-
-var dbusername = 'root';
-var dbpassword = 'winasmfspopaw256!';
-var dbhost = 'localhost';
-
-var pool = mysql.createPool({
-    connectionLimit : 100, //important
-    host     : dbhost,
-    user     : dbusername,
-    password : dbpassword,
-    database : 'userlogin',
-    debug    :  false
-});
+var pg = require('pg');
 
 
-router.post('/', function(req, res, next) {
+router.post('/', function(req, res) {
     'use strict';
     console.log("Got request to change password");
-    pool.getConnection(function(err,connection){
+    pg.connect(process.env.DATABASE_URL, function(err, connection, done) {
         if (err) {
-            connection.release();
+            done();
             console.log("Error in creating connection to database: " + err);
             res.json({"code": 100, "status": "Error in connection database"});
         } else {
@@ -49,15 +35,16 @@ router.post('/', function(req, res, next) {
                     saltpassword = newpass + salt;
                     hashedpassword = crypto.createHash('md5').update(saltpassword).digest('hex');
 
-                    connection.query("UPDATE users SET hashed=" + "'" + hashedpassword + "'" + " where username='" + username + "';", function (err, rows) {
+                    connection.query("UPDATE users SET hashed=" + "'" + hashedpassword + "'" + " where username='" + username + "';", function (err) {
                         if (err) {
                             console.log("Error occured in changing passwords: " + err);
                         }
                     });
-                    res.render('userpanel', { title: 'User Panel', extra:extra, username:req.session.username, error:"Password change success."});
+                    res.render('userpanel', { title: 'User Panel', extra:extra, username: req.session.username, error: "Password change success." });
                 } else {
                     console.log("error in accessing database in changepassword: " + err);
                 }
+                done();
             });
         }
     });

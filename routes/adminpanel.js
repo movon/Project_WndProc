@@ -1,4 +1,5 @@
 var express = require('express');
+var pg = require('pg');
 var router = express.Router();
 
 /* GET admin page. */
@@ -9,23 +10,10 @@ router.get('/', function(req, res, next) {
         res.render('index', {title: 'Programming games in MASM32', extra: extra, username: req.session.username});
         return;
     }
-    var mysql = require('mysql');
 
-    var dbusername = 'root';
-    var dbpassword = 'winasmfspopaw256!';
-    var dbhost = 'localhost';
-
-    var pool      =    mysql.createPool({
-        connectionLimit : 100, //important
-        host     : dbhost,
-        user     : dbusername,
-        password : dbpassword,
-        database : 'userlogin',
-        debug    :  false
-    });
-    pool.getConnection(function (err, connection) {
+    pg.connect(process.env.DATABASE_URL, function(err, connection, done) {
         if (err) {
-            connection.release();
+            done();
             res.json({"code" : 100, "status" : "Error in connection database"});
         } else {
             connection.query("select * from users", function (err, rows) {

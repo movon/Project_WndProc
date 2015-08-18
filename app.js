@@ -73,6 +73,10 @@ app.use('/logout', logout);
 app.use('/adminpanel', adminpanel);
 app.use('/userpanel', userpanel);
 app.use('/changepassword', changepassword);
+app.use('/zohoverify', function (req, res) {
+    'use strict';
+    res.send('1439925161293');
+});
 // catch 404 and forward to error handler
 app.use(function(req, res) {
     'use strict';

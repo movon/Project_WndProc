@@ -3,7 +3,8 @@ var router = express.Router();
 
 /* GET chat page. */
 router.get('/', function(req, res, next) {
-    extra = getExtra(req);
+    'use strict';
+    var extra = getExtra(req);
     res.render('chat', { title: 'Chat', extra:extra, username:req.session.username});
 });
 

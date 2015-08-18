@@ -26,17 +26,37 @@ var pool      =    mysql.createPool({
     debug    :  false
 });
 
+var SECRET = "6LfyPAgTAAAAANO_PHWDI4eGtC60mG5RSyB6tMqC";
+
+// Helper function to make API call to recatpcha and check response
+function verifyRecaptcha(key, callback) {
+    https.get("https://www.google.com/recaptcha/api/siteverify?secret=" + SECRET + "&response=" + key, function(res) {
+        var data = "";
+        res.on('data', function (chunk) {
+            data += chunk.toString();
+        });
+        res.on('end', function() {
+            try {
+                var parsedData = JSON.parse(data);
+                callback(parsedData.success);
+            } catch (e) {
+                callback(false);
+            }
+        });
+    });
+}
+
 //Handle POST request to sign up
-router.post('/', function(req, res, next){
+router.post('/', function(req, res, next) {
+    'use strict';
     verifyRecaptcha(req.body["g-recaptcha-response"], function(success) {
-        if(success){
-            extra = getExtra(req);
+        if (success) {
+            var extra = getExtra(req);
             pool.getConnection(function(err,connection) {
                 if (err) {
                     connection.release();
                     res.json({"code": 100, "status": "Error in connection database"});
-                }
-                else {
+                } else {
                     var error = '';
                     if (!validator.isEmail(req.body.email)) {
                         error += '<li style=\"color: red\">Invalid Email.</li>';
@@ -84,7 +104,7 @@ router.post('/', function(req, res, next){
             });
 
                 }
-        else{
+        else {
             res.render('register', {
                 title: 'Register',
                 error: '<li style=\"color: red\">Recaptcha failed.</li>',
@@ -97,25 +117,7 @@ router.post('/', function(req, res, next){
 
     });
 
-var SECRET = "6LfyPAgTAAAAANO_PHWDI4eGtC60mG5RSyB6tMqC";
 
-// Helper function to make API call to recatpcha and check response
-function verifyRecaptcha(key, callback) {
-    https.get("https://www.google.com/recaptcha/api/siteverify?secret=" + SECRET + "&response=" + key, function(res) {
-        var data = "";
-        res.on('data', function (chunk) {
-            data += chunk.toString();
-        });
-        res.on('end', function() {
-            try {
-                var parsedData = JSON.parse(data);
-                callback(parsedData.success);
-            } catch (e) {
-                callback(false);
-            }
-        });
-    });
-}
 
 
 module.exports = router;

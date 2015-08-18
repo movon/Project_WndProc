@@ -19,46 +19,43 @@ var pool = mysql.createPool({
 
 
 router.post('/', function(req, res, next) {
+    'use strict';
     console.log("Got request to change password");
     pool.getConnection(function(err,connection){
         if (err) {
             connection.release();
             console.log("Error in creating connection to database: " + err);
             res.json({"code": 100, "status": "Error in connection database"});
-        }
-        else {
+        } else {
             var username = req.session.username;
 
             connection.query("select * from users where username='" + username + "';", function (err, rows) {
-                if(!err) {
+                if (!err) {
+                    var extra = getExtra(req);
                     var oldpass = req.body.old;
-                    var salt = rows[0]['salt'];
+                    var salt = rows[0].salt;
                     var saltpassword = oldpass + salt;
                     var hashedpassword = crypto.createHash('md5').update(saltpassword).digest('hex');
-                    if(rows[0]['hashed'] != hashedpassword)
-                    {
-                        extra = getExtra(req);
+                    if (rows[0].hashed !== hashedpassword) {
                         res.render('userpanel', { title: 'User Panel', extra:extra, username:req.session.username, error:"Invalid old password"});
                         return;
                     }
-                    if(req.body.password != req.body.verifypassword)
-                    {
-                        extra = getExtra(req);
+                    if (req.body.password !== req.body.verifypassword) {
                         res.render('userpanel', { title: 'User Panel', extra:extra, username:req.session.username, error:"Password do not match"});
                         return;
                     }
                     var newpass = req.body.password;
-                    salt = rows[0]['salt'];
+                    salt = rows[0].salt;
                     saltpassword = newpass + salt;
                     hashedpassword = crypto.createHash('md5').update(saltpassword).digest('hex');
 
                     connection.query("UPDATE users SET hashed=" + "'" + hashedpassword + "'" + " where username='" + username + "';", function (err, rows) {
-                        if(err)
+                        if (err) {
                             console.log("Error occured in changing passwords: " + err);
+                        }
                     });
                     res.render('userpanel', { title: 'User Panel', extra:extra, username:req.session.username, error:"Password change success."});
-                }
-                else{
+                } else {
                     console.log("error in accessing database in changepassword: " + err);
                 }
             });

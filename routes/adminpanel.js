@@ -27,8 +27,7 @@ router.get('/', function(req, res, next) {
         if (err) {
             connection.release();
             res.json({"code" : 100, "status" : "Error in connection database"});
-        }
-        else {
+        } else {
             connection.query("select * from users", function (err, rows) {
                 connection.release();
                 if (!err) {

@@ -4,9 +4,10 @@ var crypto = require('crypto');
 
 
 /* GET login page. */
-router.get('/', function(req, res, next) {
-    extra = getExtra(req);
-    res.render('login', { title: 'Log in' , extra:extra, username:req.session.username});
+router.get('/', function(req, res) {
+    'use strict';
+    var extra = getExtra(req);
+    res.render('login', { title: 'Log in', extra: extra, username: req.session.username});
 });
 
 
@@ -23,28 +24,26 @@ var pool      =    mysql.createPool({
     debug    :  false
 });
 router.post('/', function(req, res, next) {
+    'use strict';
     pool.getConnection(function(err,connection){
         if (err) {
             connection.release();
             res.json({"code" : 100, "status" : "Error in connection database"});
-            return;
-        }
-        else {
-            extra = getExtra(req);
-            username = req.body.username;
-            password = req.body.password;
-            if(username.indexOf("'")>-1 || password.indexOf("'")>-1){
+        } else {
+            var extra = getExtra(req);
+            var username = req.body.username;
+            var password = req.body.password;
+            if (username.indexOf("'") > -1 || password.indexOf("'") > -1) {
                 res.render('login', {title: 'Detected SQL injection.', extra:extra, req:req});
                 return;
             }
 
             connection.query("select * from users where username='" + username + "';", function (err, rows) {
                 if (!err) {
-                    if (rows == 0) {
+                    if (rows === 0) {
                         res.render('login', {title: 'Invalid username or password!', extra:extra, username:req.session.username});
-                    }
-                    else {
-                        var salt = rows[0]['salt'];
+                    } else {
+                        var salt = rows[0].salt;
                         var saltpassword =  password + salt;
                         var hashedpassword = crypto.createHash('md5').update(saltpassword).digest('hex');
 
@@ -56,10 +55,8 @@ router.post('/', function(req, res, next) {
                             });
                             return;
                         }
-
-
-                        req.session.username = rows[0]['username'];
-                        req.session.privileges = (rows[0]['privileges']);
+                        req.session.username = rows[0].username;
+                        req.session.privileges = (rows[0].privileges);
                         res.redirect('/');
                     }
                 }

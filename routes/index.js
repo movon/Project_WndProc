@@ -2,8 +2,9 @@ var express = require('express');
 var router = express.Router();
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  extra = getExtra(req);
-  res.render('index', { title: 'Programming games in MASM32', extra:extra, username:req.session.username });
+router.get('/', function (req, res) {
+    'use strict';
+    var extra = getExtra(req);
+    res.render('index', { title: 'Programming games in MASM32', extra:extra, username: req.session.username });
 });
 module.exports = router;

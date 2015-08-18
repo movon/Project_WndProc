@@ -13,11 +13,9 @@ router.get('/', function(req, res, next) {
 
     pg.connect(process.env.DATABASE_URL, function(err, connection, done) {
         if (err) {
-            done();
             res.json({"code" : 100, "status" : "Error in connection database"});
         } else {
             connection.query("select * from users", function (err, rows) {
-                connection.release();
                 if (!err) {
                     var userTable = '<tr><td>Username</td><td>hashed</td><td>email</td><td>privileges</td><td>salt</td></tr>';
                     for (var i = 0; i < rows.length; i++) {
@@ -32,6 +30,7 @@ router.get('/', function(req, res, next) {
                 }
             });
         }
+        done();
     });
 });
 

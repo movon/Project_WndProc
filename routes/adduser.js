@@ -74,7 +74,6 @@ router.post('/', function(req, res) {
                         var hashedpassword = crypto.createHash('md5').update(saltpassword).digest('hex');
                         console.log("insert into users(username, hashed, email, privileges, salt) values('" + req.body.username + "','" + hashedpassword + "','" + req.body.email + "'," + "'user','" + salt + "');");
                         connection.query("insert into users(username, hashed, email, privileges, salt) values('" + req.body.username + "','" + hashedpassword + "','" + req.body.email + "'," + "'user','" + salt + "');", function (err, rows) {
-                            connection.release();
                             console.log("released connection");
                             if (!err) {
                                 console.log("sent him thank you");

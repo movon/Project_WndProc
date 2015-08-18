@@ -27,7 +27,7 @@ router.post('/', function(req, res, next) {
             res.json({"code": 100, "status": "Error in connection database"});
         }
         else {
-            username = req.session.username;
+            var username = req.session.username;
 
             connection.query("select * from users where username='" + username + "';", function (err, rows) {
                 if(!err) {

@@ -2,8 +2,9 @@ var express = require('express');
 var router = express.Router();
 
 /* GET about page. */
-router.get('/', function(req, res, next) {
-    extra = getExtra(req);
+router.get('/', function (req, res) {
+    'use strict';
+    var extra = getExtra(req);
     res.render('about', { title: 'About', extra:extra, username:req.session.username});
 });
 

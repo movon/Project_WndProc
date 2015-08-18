@@ -9,7 +9,7 @@ var mysql = require('mysql');
 
 /* GET after registration page. */
 router.get('/', function(req, res, next) {
-    extra = getExtra(req);
+    var extra = getExtra(req);
     res.render('adduser', { title: 'Thank you for signing up to our website!' , extra:extra, username:req.session.username});
 });
 

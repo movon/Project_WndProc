@@ -26,6 +26,12 @@ a:hover {
 
 html,
 body {
+    padding: 50px;
+    font: 24px "Lucida Grande", Helvetica, Arial, sans-serif;
+    background-image: url("http://7-themes.com/data_images/out/62/6985290-intel-processor.jpg");
+    background-size:cover;
+}
+body {
     height: 100%;
     background-color: #333;
 }

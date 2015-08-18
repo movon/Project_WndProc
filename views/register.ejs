@@ -32,15 +32,27 @@
 
     <form class="form-signin" action="/adduser" method="post">
         <h2 class="form-signin-heading">Registration</h2>
-        <label for="username" class="sr-only">Username</label>
-        <input type="text" id="username" class="form-control" placeholder="Username" required autofocus>
-        <label for="email" class="sr-only">Email address</label>
-        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required>
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-        <label for="recaptcha" class="sr-only">Verify you are not a robot</label>
-        <div class="g-recaptcha" data-sitekey="6LfyPAgTAAAAAOZnjPn5Ft-w7y1zyNfHhyyZeK9t"></div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+        <table cellpadding="15px" cellspacing="15px">
+            <tr>
+                <label for="username" class="sr-only">Username</label>
+                <input type="text" id="username" name="username" class="form-control" placeholder="Username" required autofocus>
+            </tr>
+            <tr>
+                <label for="inputEmail" class="sr-only">Email address</label>
+                <input type="email" id="inputEmail" name="email" class="form-control" placeholder="Email address" required>
+            </tr>
+            <tr>
+                <label for="inputPassword" class="sr-only">Password</label>
+                <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
+            </tr>
+            <tr>
+                <label for="recaptcha" class="sr-only">Verify you are not a robot</label>
+                <div class="g-recaptcha" data-sitekey="6LfyPAgTAAAAAOZnjPn5Ft-w7y1zyNfHhyyZeK9t"></div>
+            </tr>
+            <tr>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+            </tr>
+        </table>
     </form>
 
 </div> <!-- /container -->

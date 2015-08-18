@@ -13,7 +13,7 @@ var guides = require('./routes/guides');
 var chat = require('./routes/chat');
 var adduser = require('./routes/adduser');
 var login = require('./routes/login');
-var logout= require('./routes/logout');
+var logout = require('./routes/logout');
 var adminpanel = require('./routes/adminpanel');
 var userpanel = require('./routes/userpanel');
 var changepassword = require('./routes/changepassword');
@@ -33,21 +33,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
 var token = crypto.randomBytes(64).toString('hex');
 
-getExtra = function(req){
-    extra = '';
-    if(req.session.username != null){
+getExtra = function (req) {
+    'use strict';
+    var extra = '';
+    if (req.session.username !== null) {
         extra += '<li><a href="/chat">Chat</a></li>';
         extra += '<li><a href="/logout">Log Out</a></li>';
         extra += '<li><a href="/userpanel">User Panel</a></li>';
-        if(req.session.privileges == 'admin'){
+        if (req.session.privileges === 'admin') {
             extra += '<li><a href="/adminpanel">Admin Panel</a></li>';
         }
-    }
-    else{
+    } else {
         extra += '<li><a href="/register">Register</a></li>';
         extra +=  '<li><a href="/login">Log in</a></li>';
     }
-    return extra
+    return extra;
 };
 
 
@@ -58,6 +58,7 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }));
+
 app.use('/', routes);
 app.use('/about', about);
 app.use('/guides', guides);
@@ -70,15 +71,11 @@ app.use('/adminpanel', adminpanel);
 app.use('/userpanel', userpanel);
 app.use('/changepassword', changepassword);
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-    var errorid = 404;
-    res.status(err.status || 404);
+app.use(function(req, res) {
+    'use strict';
+    res.status(404);
     var extra = getExtra(req);
-    res.render('notfound404', { title: 'Not Found' , req:req, extra:extra, username: req.session.username});
-
-  //next(err);
+    res.render('notfound404', { title: 'Not Found', req: req, extra: extra, username: req.session.username});
 });
 
 // error handlers

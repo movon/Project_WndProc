@@ -21,6 +21,7 @@
     "orchestrate": "^0.3.11",
     "passport": "^0.2.1",
     "q": "^1.0.1",
-    "crypto": "latest"
+    "crypto": "latest",
+    "validator": "latest"
   }
 }

@@ -4,7 +4,7 @@ var crypto = require('crypto');
 var pg = require('pg');
 
 /* GET login page. */
-router.get('/', function(req, res) {
+router.get('/', function (req, res) {
     'use strict';
     var extra = getExtra(req);
     res.render('login', { title: 'Log in', extra: extra, username: req.session.username});

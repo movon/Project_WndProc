@@ -11,7 +11,7 @@ router.get('/', function(req, res) {
 });
 
 
-router.post('/', function(req, res) {
+router.post('/', function (req, res) {
     'use strict';
     pg.connect(process.env.DATABASE_URL, function(err, connection, done) {
         if (err) {

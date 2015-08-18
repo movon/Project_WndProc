@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var crypto = require('crypto');
-
+var pg = require('pg');
 
 /* GET login page. */
 router.get('/', function(req, res) {
@@ -11,23 +11,10 @@ router.get('/', function(req, res) {
 });
 
 
-var mysql = require('mysql');
-var dbusername = 'root';
-var dbpassword = 'winasmfspopaw256!';
-var dbhost = 'localhost';
-var pool      =    mysql.createPool({
-    connectionLimit : 100, //important
-    host     : dbhost,
-    user     : dbusername,
-    password : dbpassword,
-    database : 'userlogin',
-    debug    :  false
-});
 router.post('/', function(req, res, next) {
     'use strict';
-    pool.getConnection(function(err,connection){
+    pg.connect(process.env.DATABASE_URL, function(err, connection, done) {
         if (err) {
-            connection.release();
             res.json({"code" : 100, "status" : "Error in connection database"});
         } else {
             var extra = getExtra(req);
@@ -62,6 +49,7 @@ router.post('/', function(req, res, next) {
                 }
             });
         }
+        done();
     });
 });
 

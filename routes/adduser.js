@@ -3,33 +3,22 @@ var router = express.Router();
 var validator = require('validator');
 var https = require('https');
 var crypto = require('crypto');
-var mysql = require('mysql');
+var pg = require('pg');
 
 
 
 /* GET after registration page. */
 router.get('/', function(req, res, next) {
+    'use strict';
     var extra = getExtra(req);
     res.render('adduser', { title: 'Thank you for signing up to our website!' , extra:extra, username:req.session.username});
-});
-
-var dbusername = 'root';
-var dbpassword = 'winasmfspopaw256!';
-var dbhost = 'localhost';
-
-var pool      =    mysql.createPool({
-    connectionLimit : 100, //important
-    host     : dbhost,
-    user     : dbusername,
-    password : dbpassword,
-    database : 'userlogin',
-    debug    :  false
 });
 
 var SECRET = "6LfyPAgTAAAAANO_PHWDI4eGtC60mG5RSyB6tMqC";
 
 // Helper function to make API call to recatpcha and check response
 function verifyRecaptcha(key, callback) {
+    'use strict';
     https.get("https://www.google.com/recaptcha/api/siteverify?secret=" + SECRET + "&response=" + key, function(res) {
         var data = "";
         res.on('data', function (chunk) {
@@ -47,14 +36,14 @@ function verifyRecaptcha(key, callback) {
 }
 
 //Handle POST request to sign up
-router.post('/', function(req, res, next) {
+router.post('/', function(req, res) {
     'use strict';
+    var extra = getExtra(req);
     verifyRecaptcha(req.body["g-recaptcha-response"], function(success) {
         if (success) {
-            var extra = getExtra(req);
-            pool.getConnection(function(err,connection) {
+            pg.connect(process.env.DATABASE_URL, function (err, connection, done) {
                 if (err) {
-                    connection.release();
+                    done();
                     res.json({"code": 100, "status": "Error in connection database"});
                 } else {
                     var error = '';
@@ -94,17 +83,15 @@ router.post('/', function(req, res, next) {
                                     extra: extra,
                                     username: req.session.username
                                 });
-                            }
-                            else
+                            } else {
                                 console.log(err);
+                            }
                         });
 
                     });
                 }
             });
-
-                }
-        else {
+        } else {
             res.render('register', {
                 title: 'Register',
                 error: '<li style=\"color: red\">Recaptcha failed.</li>',

@@ -57,7 +57,7 @@ router.post('/', function(req, res) {
                         error += '<li style=\"color: red\">Password contains invalid characters.</li>';
                     }
                     connection.query("select * from users where username='" + req.body.username + "';", function (err, rows) {
-                        if (rows.length > 0) {
+                        if (rows.rows.length > 0) {
                             error += '<li style=\"color: red\">Username already taken.</li>';
                         }
                         if (error.length > 0) {

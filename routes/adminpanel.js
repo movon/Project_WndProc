@@ -3,7 +3,7 @@ var pg = require('pg');
 var router = express.Router();
 
 /* GET admin page. */
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
     'use strict';
     var extra = getExtra(req);
     if (req.session.privileges !== 'admin') {
@@ -18,11 +18,11 @@ router.get('/', function(req, res, next) {
             connection.query("select * from users", function (err, rows) {
                 if (!err) {
                     var userTable = '<tr><td>Username</td><td>hashed</td><td>email</td><td>privileges</td><td>salt</td></tr>';
-                    for (var i = 0; i < rows.length; i++) {
-                        console.log(rows[i]);
+                    for (var i = 0; i < rows.rows.length; i++) {
+                        console.log(rows.rows[i]);
                         userTable += '<tr>';
-                        for (var key in rows[i]) {
-                            userTable += '<td contenteditable>' + rows[i][key] + '</td>';
+                        for (var key in rows.rows[i]) {
+                            userTable += '<td contenteditable>' + rows.rows[i][key] + '</td>';
                         }
                         userTable += '</tr>';
                     }

@@ -11,7 +11,7 @@ router.get('/', function(req, res) {
 });
 
 
-router.post('/', function(req, res, next) {
+router.post('/', function(req, res) {
     'use strict';
     pg.connect(process.env.DATABASE_URL, function(err, connection, done) {
         if (err) {
@@ -27,15 +27,14 @@ router.post('/', function(req, res, next) {
 
             connection.query("select * from users where username='" + username + "';", function (err, rows) {
                 if (!err) {
-                    if (!rows || rows.length === 0) {
+                    if (rows.rowCount === 0) {
                         res.render('login', {title: 'Invalid username or password!', extra:extra, username:req.session.username});
                     } else {
-                        console.log(rows);
-                        var salt = rows[0].salt;
+                        var salt = rows.rows[0].salt;
                         var saltpassword =  password + salt;
                         var hashedpassword = crypto.createHash('md5').update(saltpassword).digest('hex');
 
-                        if(rows[0]['hashed'] != hashedpassword) {
+                        if (rows.rows[0].hashed !== hashedpassword) {
                             res.render('login', {
                                 title: 'Invalid username or password!',
                                 extra: extra,
@@ -43,8 +42,8 @@ router.post('/', function(req, res, next) {
                             });
                             return;
                         }
-                        req.session.username = rows[0].username;
-                        req.session.privileges = (rows[0].privileges);
+                        req.session.username = rows.rows[0].username;
+                        req.session.privileges = (rows.rows[0].privileges);
                         res.redirect('/');
                     }
                 }

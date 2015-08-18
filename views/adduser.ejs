@@ -2,14 +2,18 @@
 <html>
 <head>
     <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+    <% include templates/headheader.ejs%>
 </head>
 <body>
 
-<% include templates/header.ejs%>
+<% include templates/firstbodyheader.ejs%>
 
 <h1><%= title%></h1>
 
 <p>Hi, we are mov_on, we will teach you how to build a cool game in assembly language.</p>
+
+<% include templates/secondbodyheader.ejs%>
+
 </body>
 </html>

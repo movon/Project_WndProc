@@ -1,32 +1,90 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-  <img src="images/movon.png">
-  <p id = connedAs></p>
-  <div id = "nav">
-    <ul id ='myul'>
-      <li><a href="/">Home</a></li>
-      <li><a href="/about">About</a></li>
-      <li><a href="/guides">Guides</a></li>
-      <script>
-        var username = <%- JSON.stringify(username)%>
-        console.log(username);
-        if(username != null && username != 'undefined')
-          document.getElementById('connedAs').innerHTML= 'Logged in as ' + username;
-        else
-          document.getElementById('connedAs').innerHTML='You are not logged in';
-      </script>
-      <script>
-        var extra = <%- JSON.stringify(extra)%>
-                document.getElementById('myul').innerHTML+=extra;
-      </script>
-    </ul>
+<html lang="en">
+<head>
+  <title><%= title %></title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="WinAsm">
+  <meta name="author" content="mov_on">
+
+
+
+  <!-- Bootstrap core CSS -->
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="/stylesheets/cover.css" rel="stylesheet">
+
+  <script src="/js/ie-emulation-modes-warning.js"></script>
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+
+<div class="site-wrapper">
+  <div class="site-wrapper-inner">
+    <div class="cover-container">
+      <div class="masthead clearfix">
+        <div class="inner">
+          <h3 class="masthead-brand">Cover</h3>
+          <nav>
+            <ul class="nav masthead-nav" id='myul'>
+
+                <script>
+                    var extra = <%- JSON.stringify(extra)%>
+                            document.getElementById('myul').innerHTML+=extra;
+                </script>
+            </ul>
+          </nav>
+        </div>
+      </div>
+
+      <div class="inner cover homepagetext">
+        <h1 class="cover-heading">Welcome to WinAsm</h1>
+        <p class="lead">
+            This site's purpose is to teach you how to build games using only 32 bit assembly, using basic windows graphics libraries.
+            </p>
+        <p class="lead">
+          <a href="#" class="btn btn-lg btn-default">Learn more</a>
+        </p>
+      </div>
+
+      <div class="mastfoot">
+        <div class="inner">
+          <p>By the mov_on team.</p>
+        </div>
+      </div>
+
+    </div>
+
   </div>
-    <h1 style="font-size: 5vh"><%= title %></h1>
-    <p style="font-size: 3vh">Welcome to <%= title %></p>
-  </body>
+
+</div>
+
+
+<script>
+    var username = <%- JSON.stringify(username)%>
+            console.log(username);
+    if(username != null && username != 'undefined')
+        document.getElementById('connedAs').innerHTML= 'Logged in as ' + username;
+    else
+        document.getElementById('connedAs').innerHTML='You are not logged in';
+</script>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="/js/ie10-viewport-bug-workaround.js"></script>
+</body>
 </html>

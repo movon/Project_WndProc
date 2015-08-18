@@ -36,7 +36,10 @@ var token = crypto.randomBytes(64).toString('hex');
 getExtra = function (req) {
     'use strict';
     var extra = '';
-    if (req.session.username !== null) {
+    extra += '<li><a href="/">Home</a></li>';
+    extra += '<li><a href="/about">About</a></li>';
+    extra += '<li><a href="/guides">Guides</a></li>';
+    if (!!req.session.username) {
         extra += '<li><a href="/chat">Chat</a></li>';
         extra += '<li><a href="/logout">Log Out</a></li>';
         extra += '<li><a href="/userpanel">User Panel</a></li>';
@@ -75,7 +78,7 @@ app.use(function(req, res) {
     'use strict';
     res.status(404);
     var extra = getExtra(req);
-    res.render('notfound404', { title: 'Not Found', req: req, extra: extra, username: req.session.username});
+    res.render('notfound404', { title: 'Not Found', req: req, extra: extra, username: req.session.username, content: '404 Page not found'});
 });
 
 // error handlers

@@ -5,7 +5,9 @@ var router = express.Router();
 router.get('/', function (req, res) {
     'use strict';
     var extra = getExtra(req);
-    res.render('about', { title: 'About', extra:extra, username:req.session.username});
+    var content = 'This way you will learn a lot about assembly language and low-level programming,' +
+        'how the operating system handles graphics, and how the computer works.';
+    res.render('about', { title: 'About', extra: extra, username: req.session.username, content: content});
 });
 
 

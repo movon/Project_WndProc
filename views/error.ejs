@@ -3,15 +3,16 @@
 <html>
 <head>
     <title>Error <%= error.status%></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+    <% include templates/headheader.ejs%>
 </head>
 <body>
 
-<% include templates/header.ejs%>
+<% include templates/firstbodyheader.ejs%>
 <h1><%= message %></h1>
 <h2><%= error.status %></h2>
 <!--<pre><%= error.stack %></pre> for development purposes.-->
-
+<% include templates/secondbodyheader.ejs%>
 
 </body>
 </html>

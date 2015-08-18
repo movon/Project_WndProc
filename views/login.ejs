@@ -14,9 +14,10 @@
 
     <!-- Custom styles for this template -->
     <link href="/stylesheets/signin.css" rel="stylesheet">
+    <% include templates/headheader.ejs%>
 </head>
 <body>
-<% include templates/header.ejs%>
+<% include templates/firstbodyheader.ejs%>
 
 <div class="container">
     <form class="form-signin" action="/login" method="post">
@@ -34,5 +35,6 @@
     </form>
 
 </div> <!-- /container -->
+<% include templates/secondbodyheader.ejs%>
 </body>
 </html>

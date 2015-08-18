@@ -2,11 +2,12 @@
 <html>
 <head>
     <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+    <% include templates/headheader.ejs%>
 </head>
 <body>
 
-<% include templates/header.ejs%>
+<% include templates/firstbodyheader.ejs%>
 
 <h1><%= title%></h1>
 
@@ -18,5 +19,8 @@
     var usersTable = <%- JSON.stringify(userTable)%>
     document.getElementById('ut').innerHTML=usersTable;
 </script>
+
+<% include templates/secondbodyheader.ejs%>
+
 </body>
 </html>

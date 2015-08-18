@@ -3,9 +3,10 @@
 <head>
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <% include templates/headheader.ejs%>
 </head>
 <body>
-<% include templates/header.ejs%>
+<% include templates/firstbodyheader.ejs%>
 
 <h1><%= title %></h1>
 <h2>Change password</h2>
@@ -30,5 +31,6 @@
 
     </table>
 </form>
+<% include templates/secondbodyheader.ejs%>
 </body>
 </html>

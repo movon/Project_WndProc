@@ -1,0 +1,21 @@
+</div>
+
+</div>
+
+<script>
+    var username = <%- JSON.stringify(username)%>
+            console.log(username);
+    if(username != null && username != 'undefined')
+        document.getElementById('connedAs').innerHTML= 'Logged in as ' + username;
+    else
+        document.getElementById('connedAs').innerHTML='You are not logged in';
+</script>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="/js/ie10-viewport-bug-workaround.js"></script>

@@ -1,0 +1,25 @@
+<!--<a href="/"><img src="images/movon.png"></a>-->
+<!--<p id = connedAs style="font-size: 35px"></p>-->
+<div class="site-wrapper">
+    <div class="site-wrapper-inner">
+        <div class="cover-container">
+            <div class="masthead clearfix">
+                <div class="inner">
+                    <h3 class="masthead-brand"><%= title %></h3>
+                    <nav>
+                        <ul class="nav masthead-nav" id='myul'>
+                            <script>
+                                var extra = <%- JSON.stringify(extra)%>
+                                        document.getElementById('myul').innerHTML+=extra;
+                            </script>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
+            <div class="mastfoot">
+                <div class="inner">
+                    <p>By the mov_on team.</p>
+                </div>
+            </div>
+        </div>

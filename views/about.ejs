@@ -5,18 +5,8 @@
 
     <% include templates/headheader.ejs%>
     <script type="application/javascript">
-        var shown = false;
         function showDropDown() {
-            //document.getElementById("hiddenDropDown").style.visibility = "visible";
-            if (!shown) {
-                $("#hiddenDropDown").slideDown();
-                shown = true;
-            }
-            else {
-                $("#hiddenDropDown").slideUp();
-                shown = false;
-            }
-
+            $("#hiddenDropDown").slideToggle();
         }
         function init() {
             $("#hiddenDropDown").slideUp();

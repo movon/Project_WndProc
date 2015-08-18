@@ -1,6 +1,6 @@
 {
-  "name": "AssemblySite",
-  "version": "0.0.0",
+  "name": "WinAsm",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"

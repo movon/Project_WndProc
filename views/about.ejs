@@ -5,12 +5,25 @@
 
     <% include templates/headheader.ejs%>
     <script type="application/javascript">
+        var shown = false;
         function showDropDown() {
-            document.getElementById("hiddenDropDown").style.visibility = "visible";
+            //document.getElementById("hiddenDropDown").style.visibility = "visible";
+            if (!shown) {
+                $("#hiddenDropDown").slideDown();
+                shown = true;
+            }
+            else {
+                $("#hiddenDropDown").slideUp();
+                shown = false;
+            }
+
+        }
+        function init() {
+            $("#hiddenDropDown").slideUp();
         }
     </script>
 </head>
-<body>
+<body onload="init()">
 
 <% include templates/firstbodyheader.ejs%>
 <div class="text-center page-header">
@@ -20,7 +33,7 @@
     </p>
     <button onclick="showDropDown()" class="btn-lg navbar-btn btn-default" style="color:#080808">Contact Us</button>
     </div>
-<div class="text-center lead" id="hiddenDropDown" style="color:blanchedalmond;visibility: hidden;font-size: x-large; padding-top: 50px">
+<div class="text-center lead" id="hiddenDropDown" style="color:blanchedalmond;display: none;font-size: x-large; padding-top: 50px">
     <b> <p> Feel free to contact us!</p>
         <p> By email: INSERT HERE</p>
         <p> By Phone: INSERT HERE</p>

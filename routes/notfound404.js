@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
+/* GET an unknown page. */
 router.get('/', function(req, res, next) {
     extra = getExtra(req);
     console.log("Got into my 404");

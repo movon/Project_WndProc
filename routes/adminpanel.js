@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
+/* GET admin page. */
 router.get('/', function(req, res, next) {
     extra = getExtra(req);
     if (req.session.privileges != 'admin') {
@@ -26,7 +26,6 @@ router.get('/', function(req, res, next) {
             if (err) {
                 connection.release();
                 res.json({"code" : 100, "status" : "Error in connection database"});
-                return;
             }
             else {
                 connection.query("select * from users", function (err, rows) {

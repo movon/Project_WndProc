@@ -1,7 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var crypto = require('crypto');
-/* GET home page. */
+
+
+/* GET login page. */
 router.get('/', function(req, res, next) {
     extra = getExtra(req);
     res.render('login', { title: 'Log in' , extra:extra, username:req.session.username});

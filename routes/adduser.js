@@ -1,48 +1,17 @@
 var express = require('express');
 var router = express.Router();
 var validator = require('validator');
-var http = require('http');
 var https = require('https');
 var crypto = require('crypto');
+var mysql = require('mysql');
 
 
-function sendToGoogle(userIP, recaptcha) {
-    console.log("Sent to google");
-    var data = querystring.stringify({
-        secret: '6LfyPAgTAAAAANO_PHWDI4eGtC60mG5RSyB6tMqC',
-        response: recaptcha,
-        remoteip: userIP
-    });
 
-    var options = {
-        host: 'https://www.google.com',
-        port: 80,
-        path: '/recaptcha/api/siteverify',
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Content-Length': Buffer.byteLength(data)
-        }
-    };
-
-    var req = http.request(options, function (res) {
-        res.setEncoding('utf8');
-        res.on('data', function (chunk) {
-            console.log("body: " + chunk);
-        });
-    });
-
-    req.write(data);
-    req.end();
-}
-/* GET home page. */
+/* GET after registration page. */
 router.get('/', function(req, res, next) {
     extra = getExtra(req);
     res.render('adduser', { title: 'Thank you for signing up to our website!' , extra:extra, username:req.session.username});
 });
-
-
-var mysql = require('mysql');
 
 var dbusername = 'root';
 var dbpassword = 'winasmfspopaw256!';
@@ -66,7 +35,6 @@ router.post('/', function(req, res, next){
                 if (err) {
                     connection.release();
                     res.json({"code": 100, "status": "Error in connection database"});
-                    return;
                 }
                 else {
                     var error = '';
@@ -128,7 +96,8 @@ router.post('/', function(req, res, next){
 
 
     });
-var SECRET = "6Ld-IQoTAAAAAJ_XyAF6r9lYeI3xyBI_FF7B_94D";
+
+var SECRET = "6LfyPAgTAAAAANO_PHWDI4eGtC60mG5RSyB6tMqC";
 
 // Helper function to make API call to recatpcha and check response
 function verifyRecaptcha(key, callback) {

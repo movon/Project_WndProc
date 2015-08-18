@@ -8,7 +8,7 @@ var dbusername = 'root';
 var dbpassword = 'winasmfspopaw256!';
 var dbhost = 'localhost';
 
-var pool      =    mysql.createPool({
+var pool = mysql.createPool({
     connectionLimit : 100, //important
     host     : dbhost,
     user     : dbusername,

@@ -25,7 +25,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/images/favicon.ico'));
+app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon1.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -73,16 +73,12 @@ app.use('/logout', logout);
 app.use('/adminpanel', adminpanel);
 app.use('/userpanel', userpanel);
 app.use('/changepassword', changepassword);
-app.use('/zohoverify', function (req, res) {
-    'use strict';
-    res.send('1439925161293');
-});
 // catch 404 and forward to error handler
-app.use(function(req, res) {
+app.use(function (req, res) {
     'use strict';
     res.status(404);
     var extra = getExtra(req);
-    res.render('notfound404', { title: 'Not Found', req: req, extra: extra, username: req.session.username, content: '404 Page not found'});
+    res.render('notfound404', { title: 'Not Found', req: req, extra: extra, username: req.session.username});
 });
 
 // error handlers

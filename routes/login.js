@@ -27,9 +27,10 @@ router.post('/', function(req, res, next) {
 
             connection.query("select * from users where username='" + username + "';", function (err, rows) {
                 if (!err) {
-                    if (rows === 0) {
+                    if (!rows || rows.length === 0) {
                         res.render('login', {title: 'Invalid username or password!', extra:extra, username:req.session.username});
                     } else {
+                        console.log(rows);
                         var salt = rows[0].salt;
                         var saltpassword =  password + salt;
                         var hashedpassword = crypto.createHash('md5').update(saltpassword).digest('hex');

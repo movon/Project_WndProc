@@ -61,6 +61,7 @@ app.use(session({
 }));
 
 app.use('/', routes);
+app.use('/guides/*', guides);
 app.use('/guides', guides);
 app.use('/chat', chat);
 app.use('/register', register);

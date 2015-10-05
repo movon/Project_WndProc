@@ -14,7 +14,7 @@ router.get('/', function(req, res, next) {
     res.render('adduser', { title: 'Thank you for signing up to our website!' , extra:extra, username:req.session.username});
 });
 
-var SECRET = "6LfyPAgTAAAAANO_PHWDI4eGtC60mG5RSyB6tMqC";
+var SECRET = "6Ld-IQoTAAAAAJ_XyAF6r9lYeI3xyBI_FF7B_94D";
 
 // Helper function to make API call to recatpcha and check response
 function verifyRecaptcha(key, callback) {

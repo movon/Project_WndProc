@@ -8,7 +8,6 @@ var crypto = require('crypto');
 var favicon = require('serve-favicon');
 var register = require('./routes/register');
 var routes = require('./routes/index');
-var about = require('./routes/about');
 var guides = require('./routes/guides');
 var chat = require('./routes/chat');
 var adduser = require('./routes/adduser');
@@ -37,7 +36,6 @@ getExtra = function (req) {
     'use strict';
     var extra = '';
     extra += '<li><a href="/">Home</a></li>';
-    extra += '<li><a href="/about">About</a></li>';
     extra += '<li><a href="/guides">Guides</a></li>';
     if (!!req.session.username) {
         extra += '<li><a href="/chat">Chat</a></li>';
@@ -63,7 +61,6 @@ app.use(session({
 }));
 
 app.use('/', routes);
-app.use('/about', about);
 app.use('/guides', guides);
 app.use('/chat', chat);
 app.use('/register', register);

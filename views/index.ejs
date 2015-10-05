@@ -9,6 +9,14 @@
   <meta name="description" content="WinAsm">
   <meta name="author" content="mov_on">
 
+    <script type="application/javascript">
+        function showDropDown() {
+            $("#hiddenDropDown").slideToggle();
+        }
+        function init() {
+            $("#hiddenDropDown").slideUp();
+        }
+    </script>
 
 
   <!-- Bootstrap core CSS -->
@@ -26,8 +34,10 @@
   <![endif]-->
 </head>
 
-<body>
+<body onload="init()">
 
+<!-- START OF MAIN PAGE -->
+<div id="mainpage" style="height: 100vh;">
 <div class="site-wrapper">
   <div class="site-wrapper-inner">
     <div class="cover-container">
@@ -50,9 +60,9 @@
         <h1 class="cover-heading">Welcome to WinAsm</h1>
         <p class="lead">
             This site's purpose is to teach you how to build games using only 32 bit assembly, using basic windows graphics libraries.
-        </p>
-        <p class="lead">
-          <a href="/about" class="btn btn-lg btn-default">Learn more</a>
+            </p>
+        <p class="lead" id="scroll_down_button">
+          <button class="btn btn-lg btn-default" onclick="$.scrollTo('#aboutpage', {duration:'slow'})">Learn more</button>
         </p>
       </div>
 
@@ -67,7 +77,31 @@
   </div>
 
 </div>
+</div> <!-- END OF MAIN PAGE -->
 
+<div style="height: 20vh;">
+
+</div>
+
+<!-- START OF ABOUT PAGE -->
+<div id="aboutpage" style="height: 50vh;">
+    <div class="text-center page-header">
+        <p style="font-size: xx-large">
+            This way you will learn a lot about assembly language and low-level programming,
+            how the operating system handles graphics, and how the computer works.
+        </p>
+        <button onclick="showDropDown()" class="btn-lg navbar-btn btn-default" style="color:#080808">Contact Us</button>
+        <a href="/guides"><button class="btn-lg navbar-btn btn-default" style="color:#080808">Start Learning!</button></a>
+    </div>
+    <div class="text-center lead" id="hiddenDropDown" style="color:blanchedalmond;display: none;font-size: x-large; padding-top: 50px">
+        <b> <p> Feel free to contact us!</p>
+            <p> By email: INSERT HERE</p>
+            <p> By Phone: INSERT HERE</p>
+            <p> If you have any ideas on how to improve our service or just want to say hello, we are here for you.</p></b>
+    </div>
+
+</div>
+<!-- END OF ABOUT PAGE -->
 
 <script>
     var username = <%- JSON.stringify(username)%>
@@ -83,7 +117,15 @@
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-scrollTo/2.1.0/jquery.scrollTo.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
+<script>
+    $("#scroll_down_button").click(function() {
+        $('html, body').animate({
+            scrollTop: $("#aboutpage").offset().top
+        }, 2000);
+    });
+</script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="/js/ie10-viewport-bug-workaround.js"></script>
 </body>

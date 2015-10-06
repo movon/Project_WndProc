@@ -9,10 +9,81 @@
 
 <% include templates/firstbodyheader.ejs%>
 
-<h1>Guide 0x0 - Introduction</h1>
-<p>
+<h1>Guide 0x0 - The basics</h1>
+<h2>Introduction</h2>
+<pre style="font-size: large">
+    INSERT DIGGING HERE
+    This will teach you how to build a game in assembly using basic win32 graphic libraries.
+    You need to know assembly (16 or 32 bit) in order to fully understand this guide.
+    Learn from MSDN, learn from winprog, learn from stuff, improvise.
+</pre>
+<h2>Setting up the environment</h2>
+<pre style="font-size: large">
+    We will work in Visual Studio, and use Masm to assemble.
+    So download both of these (<a href="https://www.visualstudio.com/" style="color: blue">Visual Studio community</a> and the normal <a href="http://www.masm32.com/masmdl.htm" style="color: blue">Masm</a>).
+    Now open Visual Studio, create a new C++ empty project.
+    At the right side of the screen there should be a solution explorer window.
+    At the solution explorer, right click your project (not the solution, the one below it) click "Build Dependencies" then "Build costumization"
+    Mark Masm then click ok. You can now create your asm source file. Right click the source files directory in the solution explorer,
+    then Add -> New Item -> Visual c++ -> C++ File -> Change the name of the file extension from .cpp to .asm then click add.
+    Now a few more configurations. Right click your project -> Propertries -> Linker -> System -> Change SubSystem to Windows.
+    Then go to Linker -> Advanced -> Go to the bottom of the page and Set "Image Has Safe Exception Handlers" to No.
+</pre>
+<h2>Starting to write code</h2>
+<pre style="font-size: large">
+    Now we can start writing code.
+    First, you should tell the assembler a few stuff. <pre>
+      .486                                      ; create 32 bit code
+      .model flat, stdcall                      ; 32 bit memory model
+      option casemap :none                      ; case sensitive
+    </pre>
+    The first line means that you are gonna use the .486 Intel standard commands.
+    The second line means that we are using 32 bit flat memory model
+    The third line means that our code will be case sensitive which mean the variable "num" isn't the variable "Num".
+
+
+    Second, lets include some shit.
+    Add this at the top of your code, just below the first three lines (You can leave a few lines spaced out for the code to look sexier)
+    <pre>
+        	include \masm32\include\windows.inc
+            include \masm32\include\kernel32.inc
+            include \masm32\include\user32.inc
+            include \masm32\include\gdi32.inc
+            include \masm32\include\Advapi32.inc
+            include \masm32\include\winmm.inc
+            include \masm32\include\dialogs.inc       ; macro file for dialogs
+            include \masm32\macros\macros.asm         ; masm32 macro file
+            includelib \masm32\lib\winmm.lib
+            includelib \masm32\lib\gdi32.lib
+            includelib \masm32\lib\user32.lib
+            includelib \masm32\lib\kernel32.lib
+            includelib \masm32\lib\Comctl32.lib
+            includelib \masm32\lib\comdlg32.lib
+            includelib \masm32\lib\shell32.lib
+            includelib \masm32\lib\oleaut32.lib
+            includelib \masm32\lib\ole32.lib
+            includelib \masm32\lib\msvcrt.lib
+    </pre>
+    If you read what you just copied, you noticed for each name of library, there are:
+        1. inc file: The curious reader who will open will find tons of defintions for constants and functions. This file is included as a sort of a header using the "include" command.
+        2. lib file: This file is full of binary shit. Don't even try to read it. Basically its just machine code which relates to the header file.
+    Most of those libraries are mandatory for you to start working, as there are many cool functions in all of them which we will use later.
+    A task for you guys at home will be to find out which libraries are not necessary for your project. If you do, comment them out using the ";" sign since you might need them later on.
+
+    Now you can create your code segment with a main procedure, it will look like<pre>
+        .code
+        main PROC
+            invoke ExitProcess, 0 ;(This is a comment.) This is a windows function that comes from our Kernel32 include.
+                                  ; The curious reader will go to MSDN and read more about this function.
+        main ENDP
+        end main
+    </pre>
+    Now that your code compiles and runs, you can continue to do some really cool stuff.
+</pre>
+<h2>Opening a window</h2>
+<pre>
     
-</p>
+</pre>
 <% include templates/secondbodyheader.ejs%>
 </body>
 </html>

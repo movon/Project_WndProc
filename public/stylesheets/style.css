@@ -21,3 +21,11 @@ body {
     background-color:#D3D3D3;
     color:orangered;
 }
+
+.input-textbox-register {
+    margin-top: 3%;
+}
+
+.submit-button {
+    margin-top: 3%;
+}

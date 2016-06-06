@@ -12,8 +12,10 @@
     <!-- Bootstrap core CSS -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
 
+
     <!-- Custom styles for this template -->
     <link href="/stylesheets/signin.css" rel="stylesheet">
+    <link href="/stylesheets/style.css" rel="stylesheet">
     <% include templates/headheader.ejs%>
 </head>
 <body>
@@ -33,14 +35,14 @@
     <form class="form-signin" action="/adduser" method="post">
         <h2 class="form-signin-heading">Registration</h2>
         <label for="username" class="sr-only">Username</label>
-        <input type="text" id="username" class="form-control" placeholder="Username" required autofocus>
+        <input type="text" id="username" class="form-control input-textbox-register" placeholder="Username" required autofocus>
         <label for="email" class="sr-only">Email address</label>
-        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required>
+        <input type="email" id="inputEmail" class="form-control input-textbox-register" placeholder="Email address" required>
         <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+        <input type="password" id="inputPassword" class="form-control input-textbox-register" placeholder="Password" required>
         <label for="recaptcha" class="sr-only">Verify you are not a robot</label>
         <div class="g-recaptcha" data-sitekey="6Ld-IQoTAAAAAMhfiQljgVu1w1dIU5yBhs9wvx79"></div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+        <button class="btn btn-lg btn-primary btn-block submit-button" type="submit">Register</button>
     </form>
 
 </div> <!-- /container -->

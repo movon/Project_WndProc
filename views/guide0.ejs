@@ -32,7 +32,8 @@
 <h2>Starting to write code</h2>
 <pre style="font-size: large">
     Now we can start writing code.
-    First, you should tell the assembler a few stuff. <pre>
+    First, you should tell the assembler a few stuff.
+    <pre>
       .486                                      ; create 32 bit code
       .model flat, stdcall                      ; 32 bit memory model
       option casemap :none                      ; case sensitive
@@ -42,8 +43,8 @@
     The third line means that our code will be case sensitive which mean the variable "num" isn't the variable "Num".
 
 
-    Second, lets include some shit.
-    Add this at the top of your code, just below the first three lines (You can leave a few lines spaced out for the code to look sexier)
+    Secondly, <b>lets include some shit.</b>
+    Add this at the top of your code, just below the first three lines (You can leave a few lines spaced out for the code to look fancier)
     <pre>
             include \masm32\include\windows.inc
             include \masm32\include\kernel32.inc
@@ -64,13 +65,51 @@
             includelib \masm32\lib\ole32.lib
             includelib \masm32\lib\msvcrt.lib
     </pre>
-    If you read what you just copied, you noticed for each name of library, there are:
-        1. inc file: The curious reader who will open will find tons of defintions for constants and functions. This file is included as a sort of a header using the "include" command.
+    If you read what you just copied, you noticed that for each library, there are:
+        1. inc file: The curious reader who will open them will find tons of definitions for constants and functions. This file is included as a sort of a header using the "include" command.
         2. lib file: This file is full of binary shit. Don't even try to read it. Basically its just machine code which relates to the header file.
     Most of those libraries are mandatory for you to start working, as there are many cool functions in all of them which we will use later.
     A task for you guys at home will be to find out which libraries are not necessary for your project. If you do, comment them out using the ";" sign since you might need them later on.
+</pre>
+<h2>The segments</h2>
+<pre>
+    Because assembly is such a great language, that likes order, you must divide your code into segments.
+    Your mark a segment by putting a dot before its name, everything after that is in that segment, until another segment opens.
+    <h3>The const segment</h3>
+    The first segment that we will talk about is the const segment. It does pretty much as you would expect - it defines constants.
+    In assembly, we define constants by using the "equ" keyword between the constant name and the constant value.
+    The convention for constants in assembly is similar to other languages: all caps separated by underscores.
+    like this: CONST_NAME equ CONST_VALUE
+    For now, we will use the const segment for defining our window height and width.
+    The best practice when programming is to use constants. It helps other people understand what we meant when we wrote a random number in our code,
+    it helps us understand our code in the future, and makes changing constants much, much easier.
+    For now, our const segment will look like this:
+    <pre>
+        .const
+            WINDOW_WIDTH    equ     800
+            WINDOW_HEIGHT   equ     600
+    </pre>
 
-    Now you can create your code segment with a main procedure, it will look like<pre>
+    <h3>The data segment</h3>
+    The data segment is used for declaring variables.
+    In assembly we declare variables like this:
+    VARIABLE_NAME variable_size VARIABLE_INITIAL_VALUE
+    the variable size should be one of those: db (define byte), dw (define word), dd (define double word), or any other variable type,
+    for example types windows has provided us when we included their libraries.
+    For now, our data segment will look like this:
+    <pre>
+        ClassName       DB      "TheClass",0
+        windowTitle     DB      "A Game!",0
+    </pre>
+    This is a way of defining strings - we will get into it more later, but for now, you should know that a string is just an array of bytes, which are ASCII codes that present characters.
+    If you are curious, read about ASCII encoding. Another important thing to understand is that in order to let programs know where you string ends, you should end it with the NULL character which is 0.
+
+    <h3>The code segment</h3>
+    Now we will talk about the code segment - my favorite one.
+    This is where we will write all of our great, beautiful code.
+    The code segment must contain a main function, which is where the execution starts.
+    As of now, our code segment will look like this:
+    <pre>
         .code
         main PROC
             invoke ExitProcess, 0 ;(This is a comment.) This is a windows function that comes from our Kernel32 include.
@@ -78,37 +117,7 @@
         main ENDP
         end main
     </pre>
-    Now that your code compiles and runs, you can continue to do some really cool stuff.
-</pre>
-<h2>Opening a window</h2>
-We are now going to add to define our window in the main function.
-<pre>
-main PROC
-LOCAL wndcls:WNDCLASSA ; Class struct for the window
-LOCAL hWnd:HWND ;Handle to the window
-LOCAL msg:MSG
-
-invoke RtlZeroMemory, addr wndcls, SIZEOF wndcls ;Empty the window class, clean memory
-mov eax, offset ClassName
-mov wndcls.lpszClassName, eax ;Set the class name
-invoke GetStockObject, BLACK_BRUSH
-mov wndcls.hbrBackground, eax ;Set the background color as black
-mov eax, ProjectWndProc
-mov wndcls.lpfnWndProc, eax ;Set the procedure that handles the window messages
-invoke RegisterClassA, addr wndcls ;Register the class
-invoke CreateWindowExA, WS_EX_COMPOSITED, addr ClassName, addr windowTitle, WS_SYSMENU, 100, 100, WINDOW_WIDTH, WINDOW_HEIGHT, 0, 0, 0, 0 ;Create the window
-mov hWnd, eax ;Save the handle
-invoke ShowWindow, eax, SW_SHOW ;Show it
-invoke SetTimer, hWnd, MAIN_TIMER_ID, 20, NULL ;Set the repaint timer
-
-msgLoop:
- ; PeekMessage
-invoke GetMessage, addr msg, hWnd, 0, 0 ;Retrieve the messages from the window
-invoke DispatchMessage, addr msg ;Dispatches a message to the window procedure
-jmp msgLoop
-
-invoke ExitProcess, 1
-main ENDP
+    notice the "end main" at the end of the code. We must have that line, as a directive to signal that the main function code ended.
 </pre>
 <% include templates/secondbodyheader.ejs%>
 </body>

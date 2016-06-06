@@ -45,7 +45,7 @@
     Second, lets include some shit.
     Add this at the top of your code, just below the first three lines (You can leave a few lines spaced out for the code to look sexier)
     <pre>
-        	include \masm32\include\windows.inc
+            include \masm32\include\windows.inc
             include \masm32\include\kernel32.inc
             include \masm32\include\user32.inc
             include \masm32\include\gdi32.inc
@@ -81,8 +81,34 @@
     Now that your code compiles and runs, you can continue to do some really cool stuff.
 </pre>
 <h2>Opening a window</h2>
+We are now going to add to define our window in the main function.
 <pre>
+main PROC
+LOCAL wndcls:WNDCLASSA ; Class struct for the window
+LOCAL hWnd:HWND ;Handle to the window
+LOCAL msg:MSG
 
+invoke RtlZeroMemory, addr wndcls, SIZEOF wndcls ;Empty the window class, clean memory
+mov eax, offset ClassName
+mov wndcls.lpszClassName, eax ;Set the class name
+invoke GetStockObject, BLACK_BRUSH
+mov wndcls.hbrBackground, eax ;Set the background color as black
+mov eax, ProjectWndProc
+mov wndcls.lpfnWndProc, eax ;Set the procedure that handles the window messages
+invoke RegisterClassA, addr wndcls ;Register the class
+invoke CreateWindowExA, WS_EX_COMPOSITED, addr ClassName, addr windowTitle, WS_SYSMENU, 100, 100, WINDOW_WIDTH, WINDOW_HEIGHT, 0, 0, 0, 0 ;Create the window
+mov hWnd, eax ;Save the handle
+invoke ShowWindow, eax, SW_SHOW ;Show it
+invoke SetTimer, hWnd, MAIN_TIMER_ID, 20, NULL ;Set the repaint timer
+
+msgLoop:
+ ; PeekMessage
+invoke GetMessage, addr msg, hWnd, 0, 0 ;Retrieve the messages from the window
+invoke DispatchMessage, addr msg ;Dispatches a message to the window procedure
+jmp msgLoop
+
+invoke ExitProcess, 1
+main ENDP
 </pre>
 <% include templates/secondbodyheader.ejs%>
 </body>

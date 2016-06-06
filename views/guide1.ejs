@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+
+    <% include templates/headheader.ejs%>
+</head>
+<body>
+
+<% include templates/firstbodyheader.ejs%>
+
+<h1>Guide 0x1 - the message loop</h1>
+<h2>What is the messsage loop?</h2>
+<pre>
+    The message loop is the most amazing thing you can imagine. It can do anything for you.
+    Think of it as your loyal servant. Every time <b>anything</b> happens, your message loop will be informed of it.
+    Then, it will send it to your window procedure (which we will talk about in the next section).
+    So what is the message loop exactly? it is really similar to how it sounds. look at that!
+    <pre>
+    msgLoop:
+     ; PeekMessage
+    invoke GetMessage, addr msg, hWnd, 0, 0 ;Retrieve the messages from your window.
+    invoke DispatchMessage, addr msg ;Dispatches a message to the window procedure
+    jmp msgLoop
+    </pre>
+    It does 2 things, in an infinite loop(not really, The program stops when a method like ExitProcess is called inside the window proc).
+    First, it receives messages about events related to your window.
+    These events are provided by the operating system (Windows) and they inform you of any action you need to know about in your window.
+    Now, we will learn about how to get these super cool and useful messages and utilize them.
+</pre>
+<h2>The procedure that handles these messages</h2>
+<pre>
+    In order to receive and utilize the messages, we should create a procedure that will handle them.
+    Let's call this procedure ProjectWndProc. It recieves 4 parameters:
+    hWnd of type HWND, message of type UINT, wParam type WPARAM, and lParam type LPARAM.
+    Let's expand on each parameter:
+        The first one is of type HWND, which means the <b>Window Handler</b>. An handle, according to msdn, is:
+        <i>
+            An object is a data structure that represents a system resource, such as a file, thread, or graphic image.
+            An application cannot directly access object data or the system resource that an object represents.
+        </i>
+        The second one, "message", of type UINT, is the message id. There are many message IDs, they usually start with WM.
+        Really useful messages are: WM_PAINT, WM_CLOSE, WM_KEYDOWN, WM_TIMER, and many, many others your can read about <a href="https://wiki.winehq.org/List_Of_Windows_Messages">here</a>.
+
+        wParam and lParam are parameters that come with some of the messages, that specify additional information about the event.
+        For exmaple, in mouse clicks, they will contain the location the click occured.
+    Then, inside of our procedure, we will check which message we got, and act accordingly.
+</pre>
+<h3>Example of message loop
+    If you will run this message loop, you should see a blank screen.
+    This is the first time we have a running program with a window that opens.
+    That is impressive!</h3>
+<pre>
+ProjectWndProc	PROC,	hWnd:HWND, message:UINT, wParam:WPARAM, lParam:LPARAM
+	local paint:PAINTSTRUCT
+	local hdc:HDC
+	local brushcolouring:HBRUSH
+
+	cmp message,	WM_CLOSE
+	je	closing
+	cmp message,	WM_TIMER
+	je	timing
+	jmp OtherInstances
+
+
+	closing:
+	invoke ExitProcess, 0
+
+	timing:
+	invoke InvalidateRect, hWnd, NULL, TRUE
+	ret
+OtherInstances:
+	invoke DefWindowProc, hWnd, message, wParam, lParam
+	ret
+
+ProjectWndProc	ENDP
+</pre>
+
+<h1>Writing the code at the main function and opening the window</h1>
+<pre>
+    As you may have noticed, all the code that we wrote before does nothing, since we have never wrote code that uses it.
+    Let's go to our main function, open a window, and set our window handle procedure to handle this window.
+    This one is going to be a bit complex, so listen carefully and for any function you do not understand search in MSDN.
+    <pre>
+    main PROC
+    LOCAL wndcls:WNDCLASSA ; Class struct for the window
+    LOCAL hWnd:HWND ;Handle to the window
+    LOCAL msg:MSG
+    invoke RtlZeroMemory, addr wndcls, SIZEOF wndcls ;Empty the window class, clean memory
+    mov eax, offset ClassName
+    mov wndcls.lpszClassName, eax ;Set the class name
+    invoke GetStockObject, BLACK_BRUSH
+    mov wndcls.hbrBackground, eax ;Set the background color as black
+    mov eax, ProjectWndProc
+    mov wndcls.lpfnWndProc, eax ;Set the procedure that handles the window messages
+    invoke RegisterClassA, addr wndcls ;Register the class
+    invoke CreateWindowExA, WS_EX_COMPOSITED, addr ClassName, addr windowTitle, WS_SYSMENU, 100, 100, WINDOW_WIDTH, WINDOW_HEIGHT, 0, 0, 0, 0 ;Create the window
+    mov hWnd, eax ;Save the handle
+    invoke ShowWindow, eax, SW_SHOW ;Show it
+    invoke SetTimer, hWnd, MAIN_TIMER_ID, 20, NULL ;Set the repaint timer
+
+    msgLoop:
+    ; PeekMessage
+        invoke GetMessage, addr msg, hWnd, 0, 0 ;Retrieve the messages from the window
+        invoke DispatchMessage, addr msg ;Dispatches a message to the window procedure
+    jmp msgLoop
+
+    invoke ExitProcess, 1
+    main ENDP
+    </pre>
+
+</pre>
+<% include templates/secondbodyheader.ejs%>
+</body>
+</html>

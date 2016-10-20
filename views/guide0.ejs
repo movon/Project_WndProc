@@ -3,7 +3,9 @@
 <head>
     <title><%= title %></title>
 
+
     <% include templates/headheader.ejs%>
+    <link href="/stylesheets/guides.css" rel="stylesheet">
 </head>
 <body>
 
@@ -11,14 +13,14 @@
 
 <h1>Guide 0x0 - The basics</h1>
 <h2>Introduction</h2>
-<pre style="font-size: large">
+<pre>
     INSERT DIGGING HERE
     This will teach you how to build a game in assembly using basic win32 graphic libraries.
     You need to know assembly (16 or 32 bit) in order to fully understand this guide.
     Learn from MSDN, learn from winprog, learn from stuff, improvise.
 </pre>
 <h2>Setting up the environment</h2>
-<pre style="font-size: large">
+<pre>
     We will work in Visual Studio, and use Masm to assemble.
     So download both of these (<a href="https://www.visualstudio.com/" style="color: blue">Visual Studio community</a> and the normal <a href="http://www.masm32.com/masmdl.htm" style="color: blue">Masm</a>).
     Now open Visual Studio, create a new C++ empty project.
@@ -30,7 +32,7 @@
     Then go to Linker -> Advanced -> Go to the bottom of the page and Set "Image Has Safe Exception Handlers" to No.
 </pre>
 <h2>Starting to write code</h2>
-<pre style="font-size: large">
+<pre>
     Now we can start writing code.
     First, you should tell the assembler a few stuff.
     <pre>
@@ -119,6 +121,7 @@
     </pre>
     notice the "end main" at the end of the code. We must have that line, as a directive to signal that the main function code ended.
 </pre>
+<% include templates/previousAndNextButtons.ejs%>
 <% include templates/secondbodyheader.ejs%>
 </body>
 </html>

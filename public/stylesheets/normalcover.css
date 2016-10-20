@@ -26,9 +26,9 @@ a:hover {
 
 html,
 body {
-  padding-left: 50px;
-  padding-right: 50px;
-  padding-top: 80px;
+  padding-left: 3%;
+  padding-right: 3%;
+  padding-top: 3%;
   font: 24px "Lucida Grande", Helvetica, Arial, sans-serif;
   background-image: url("/images/bg2.jpg");
   background-size:cover;
@@ -58,6 +58,9 @@ body {
 .site-wrapper-inner {
   display: table-cell;
   vertical-align: top;
+  width: 80%;
+  margin-right: 10%;
+  padding-right: 10%;
 }
 .cover-container {
   margin-right: auto;
@@ -173,3 +176,11 @@ body {
     width: 700px;
   }
 }
+
+
+
+.no-over-flow-div {
+  box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;
+  width: 50vw;
+}
+

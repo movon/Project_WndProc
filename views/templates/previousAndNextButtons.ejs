@@ -1,0 +1,12 @@
+<!--<input type="button" value="Click Me" style="float: right;">-->
+<!--<input type="button" value="Click Me" style="float: left;">-->
+<script>
+    function getRelativeGuide(difference) {
+        var urlIndexUntilNumber = window.location.href.lastIndexOf('/')
+        var urlUntilGuideNumber = window.location.href.substr(0, urlIndexUntilNumber + 1)
+        var guideNumber = parseInt(window.location.href.substr(urlIndexUntilNumber + 1))
+        window.location = urlUntilGuideNumber + (guideNumber + difference)
+    }
+</script>
+<button type="button" style="float: right;" class="btn btn-lg btn-default" onclick="getRelativeGuide(1)">Next guide</button>
+<button type="button" style="float: left;" class="btn btn-lg btn-default" onclick="getRelativeGuide(-1)">Previous guide</button>

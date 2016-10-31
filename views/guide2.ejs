@@ -14,10 +14,19 @@
 <h1>Guide 0x2 - getting inputs from user</h1>
 <h2>Introduction</h2>
 <pre style="font-size: large">
-    On this guide we will be recieving inputs from the user. What kind of input?
-    Mouse clicks and position, keyboard pressses. If you want any other input, go search online about how to get it using our methods (or not).
+    On this guide we will be receiving inputs from the user. What kind of input?
+    Mouse clicks and position, keyboard presses. If you want any other input, go search online about how to get it using our methods (or not).
+    <a style="color: darkred;" href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632585(v=vs.85).aspx">This</a> page will be very helpful in your endeavours through the windows input system.
 </pre>
-<h2></h2>
+<h2>The Event Approach</h2>
+<pre style="font-size: large">
+    One approach of receiving input from a user is by using the event loop mentioned in the previous guide. As we said, one of the possible values of the message in the event loop is WM_KEYDOWN.    This value along with other values you can read on <a style="color: darkred;" href="https://msdn.microsoft.com/en-us/library/windows/desktop/ff468861(v=vs.85).aspx">here</a>, will notify you when a keyboard event has happened.
+    We don't like this approach to event handling since you have to change your whole programming style to fit this construct of event based handling which may not be comfortable for most people. For us at least it was easier to query the state of a certain key at any time we wanted to rather than at the exact time the key event happened. This guide is meant to show you all of the possibilities and let you choose your own way through the creative forest we call assembly programming. If you want to dig deeper into this approach use the link we have supplied in the introductory segment of this guide, it contains similar documentation concerning mouse input.
+</pre>
+<h2>The Asynchronous Approach</h2>
+<pre style="font-size: large">
+    This is our favourite approach to receive input from the user.
+</pre>
 <% include templates/previousAndNextButtons.ejs%>
 <% include templates/secondbodyheader.ejs%>
 </body>

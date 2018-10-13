@@ -17,6 +17,7 @@ router.get('/', function(req, res, next) {
 // Helper function to make API call to recatpcha and check response
 function verifyRecaptcha(key, callback) {
     'use strict';
+    console.log("Verifying captcha with secret " + process.env.SECRET + " and response key " + key);
     https.get("https://www.google.com/recaptcha/api/siteverify?secret=" + process.env.SECRET + "&response=" + key, function(res) {
         var data = "";
         res.on('data', function (chunk) {
@@ -25,8 +26,10 @@ function verifyRecaptcha(key, callback) {
         res.on('end', function() {
             try {
                 var parsedData = JSON.parse(data);
+                console.log("Got all data from google recaptcha: " + JSON.stringify(parsedData));
                 callback(parsedData.success);
             } catch (e) {
+                console.log("Error while trying to get all data from google recaptcha");
                 callback(false);
             }
         });
@@ -89,12 +92,13 @@ router.post('/', function(req, res) {
                 }
             });
         } else {
-            res.render('register', {
-                title: 'Register',
-                error: '<li style=\"color: red\">Recaptcha failed.</li>',
-                extra: extra,
-                username: req.session.username
-            });
+                res.render('register', {
+                    title: 'Register',
+                    error: '<li style=\"color: red\">Recaptcha failed.</li>',
+                    extra: extra,
+                    username: req.session.username
+                });
+                console.log('Recaptcha failed for ')
             }
         });
 

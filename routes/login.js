@@ -54,7 +54,7 @@ router.post('/', function (req, res) {
                     (err) => {
                         console.error("failed querying users database for logging in", err, err.stack);
                         client.end();
-                        res.render('login', {title: 'Failed querying databaase for logging in', extra: extra, username: req.session.username});
+                        res.render('login', {title: 'Failed querying database for logging in', extra: extra, username: req.session.username});
                     }
                 );
         }, (err) => {

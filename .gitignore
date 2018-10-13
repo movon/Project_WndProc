@@ -1,4 +1,3 @@
 node_modules/
 .idea/
-pacakage-lock.json
-
+package-lock.json

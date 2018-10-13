@@ -4,6 +4,7 @@ var validator = require('validator');
 var https = require('https');
 var crypto = require('crypto');
 var { Client } = require('pg');
+const client = new Client();
 
 
 
@@ -42,7 +43,7 @@ router.post('/', function(req, res) {
     var extra = getExtra(req);
     verifyRecaptcha(req.body["g-recaptcha-response"], function(success) {
         if (success) {
-            Client.connect(process.env.DATABASE_URL, function (err, connection, done) {
+            client.connect(process.env.DATABASE_URL, function (err, connection, done) {
                 if (err) {
                     done();
                     res.json({"code": 100, "status": "Error in connection database"});

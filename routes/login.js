@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var crypto = require('crypto');
-var {Client } = require('pg');
+const { Client } = require('pg');
+const client = new Client();
 
 /* GET login page. */
 router.get('/', function (req, res) {
@@ -13,7 +14,7 @@ router.get('/', function (req, res) {
 
 router.post('/', function (req, res) {
     'use strict';
-    Client.connect(process.env.DATABASE_URL, function(err, connection, done) {
+    client.connect(process.env.DATABASE_URL, function(err, connection, done) {
         if (err) {
             res.json({"code" : 100, "status" : "Error in connection database"});
         } else {

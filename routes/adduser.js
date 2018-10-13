@@ -90,7 +90,7 @@ router.post('/', function(req, res) {
                                 var salt = crypto.randomBytes(32).toString('hex');
                                 var saltpassword =  password + salt;
                                 var hashedpassword = crypto.createHash('md5').update(saltpassword).digest('hex');
-                                connection.query("insert into users(username, hashed, email, privileges, salt) values($1,$2,$3,$4,$5);", [req.body.username, hashedpassword, req.body.email, 'user', salt])
+                                client.query("insert into users(username, hashed, email, privileges, salt) values($1,$2,$3,$4,$5);", [req.body.username, hashedpassword, req.body.email, 'user', salt])
                                     .then(
                                         () => {
                                             console.log("sent him thank you, adding user successful");

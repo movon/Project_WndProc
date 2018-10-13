@@ -81,6 +81,7 @@ app.use(function (req, res) {
     res.render('notfound404', { title: 'Not Found', req: req, extra: extra, username: req.session.username});
 });
 
+console.log("creating users if doesn't exist");
 client.connect();
 client.query("select * from users limit 1;").then((row) => {
     console.log("users table exists");

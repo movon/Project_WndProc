@@ -4,8 +4,7 @@ var crypto = require('crypto');
 var { Client } = require('pg');
 const client = new Client(
     {
-        host: process.env.DATABASE_URL,
-        port: 5432
+        host: process.env.DATABASE_URL
     }
 );
 

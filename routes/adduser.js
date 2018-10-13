@@ -127,9 +127,6 @@ router.post('/', function(req, res) {
             });
             console.log('Recaptcha failed for ');
         }
-    })
-    .catch(e => {
-        console.error("failed connecting to recaptcha", e, e.stack);
     });
 
 

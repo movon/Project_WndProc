@@ -94,6 +94,7 @@ router.post('/', function(req, res) {
                                     .then(
                                         () => {
                                             console.log("sent him thank you, adding user successful");
+                                            req.session.privileges = 'user';
                                             client.end();
                                             res.render('adduser', {
                                                 title: 'Thank you for signing up to our website!',

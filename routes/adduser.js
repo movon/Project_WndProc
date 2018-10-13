@@ -14,12 +14,10 @@ router.get('/', function(req, res, next) {
     res.render('adduser', { title: 'Thank you for signing up to our website!' , extra:extra, username:req.session.username});
 });
 
-var SECRET = "6Ld-IQoTAAAAAJ_XyAF6r9lYeI3xyBI_FF7B_94D";
-
 // Helper function to make API call to recatpcha and check response
 function verifyRecaptcha(key, callback) {
     'use strict';
-    https.get("https://www.google.com/recaptcha/api/siteverify?secret=" + SECRET + "&response=" + key, function(res) {
+    https.get("https://www.google.com/recaptcha/api/siteverify?secret=" + process.env.SECRET + "&response=" + key, function(res) {
         var data = "";
         res.on('data', function (chunk) {
             data += chunk.toString();

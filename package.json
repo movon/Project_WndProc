@@ -1,6 +1,10 @@
 {
-  "name": "WinAsm",
+  "name": "winasm",
   "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/movon/Project_Wndproc.git"
+  },
   "description": "Learn game programming in 32 bit assembly using win32 API.",
   "main": "bin/www",
   "keywords": [
@@ -28,26 +32,23 @@
     "start": "node ./bin/www"
   },
   "author": "mov_on",
-  "license": "mov_on",
+  "license": "MIT",
   "dependencies": {
-    "bcryptjs": "^0.7.12",
-    "body-parser": "^1.9.0",
-    "cookie-parser": "^1.3.3",
-    "crypto": "latest",
-    "debug": "^4.1.0",
-    "ejs": "~2.3.1",
-    "express": "^4.9.5",
-    "express-handlebars": "^3.0.0",
-    "express-session": "^1.8.2",
-    "method-override": "^2.2.0",
-    "morgan": "^1.9.1",
-    "mysql": "latest",
-    "orchestrate": "^0.8.2",
-    "passport": "^0.2.1",
-    "pg": "^7.5.0",
-    "q": "^1.0.1",
-    "serve-favicon": "^2.5.0",
-    "socket.io": "^2.1.1",
+    "bcryptjs": "latest",
+    "body-parser": "latest",
+    "cookie-parser": "latest",
+    "debug": "latest",
+    "ejs": "latest",
+    "express": "latest",
+    "express-handlebars": "latest",
+    "express-session": "latest",
+    "method-override": "latest",
+    "morgan": "latest",
+    "passport": "latest",
+    "pg": "latest",
+    "q": "latest",
+    "serve-favicon": "latest",
+    "socket.io": "latest",
     "validator": "latest"
   }
 }

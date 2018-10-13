@@ -2,7 +2,12 @@ var express = require('express');
 var router = express.Router();
 var crypto = require('crypto');
 const { Client } = require('pg');
-const client = new Client();
+const client = new Client(
+    {
+        host: process.env.DATABASE_URL,
+        port: 5334
+    }
+);
 
 /* GET login page. */
 router.get('/', function (req, res) {

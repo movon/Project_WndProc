@@ -1,13 +1,20 @@
 var express = require('express');
 var router = express.Router();
 var crypto = require('crypto');
-var {Client } = require('pg');
+var { Client } = require('pg');
+const client = new Client(
+    {
+        host: process.env.DATABASE_URL,
+        port: 5334
+    }
+);
+
 
 
 router.post('/', function(req, res) {
     'use strict';
     console.log("Got request to change password");
-    Client.connect(process.env.DATABASE_URL, function(err, connection, done) {
+    client.connect(process.env.DATABASE_URL, function(err, connection, done) {
         if (err) {
             done();
             console.log("Error in creating connection to database: " + err);

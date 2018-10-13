@@ -1,7 +1,12 @@
 var express = require('express');
 var router = express.Router();
 var { Client } = require('pg');
-const client = new Client();
+const client = new Client(
+    {
+        host: process.env.DATABASE_URL,
+        port: 5334
+    }
+);
 
 /* GET admin page. */
 router.get('/', function (req, res, next) {

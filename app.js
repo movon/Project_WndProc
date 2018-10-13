@@ -91,7 +91,7 @@ client.query("select * from users limit 1;").then((row) => {
         .then(() => {
             console.log("table was created correctly");
         }, (err) => {
-            console.error("table was not created correctly");
+            console.error("table was not created correctly", err, err.stack);
     });
 });
 client.end();

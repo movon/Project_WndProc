@@ -3,7 +3,6 @@
 <head>
     <title><%= title %></title>
 
-
     <% include templates/headheader.ejs%>
     <link href="/stylesheets/guides.css" rel="stylesheet">
 </head>
@@ -14,10 +13,24 @@
 <h1>Guide 0x0 - The basics</h1>
 <h2>Introduction</h2>
 <pre>
-    INSERT DIGGING HERE
-    This will teach you how to build a game in assembly using basic win32 graphic libraries.
-    You need to know assembly (16 or 32 bit) in order to fully understand this guide.
-    Learn from MSDN, learn from winprog, learn from stuff, improvise.
+    We are writing this guide because we wrote games in assembly, using Windows 32 API functions and graphics directly.
+    This is a bit low level for game development (at least in 2018) which is probably the reason why we couldn't find any guide for anything similar on the internet.
+    We had to do a lot of research and discovery for doing uncommon things (for example drawing images in an angle, decimals, etc.), and we want to share that knowledge.
+    Writing big assembly projects taught us a lot about how the processor and the memory work, about WinAPI, and about coding in general.
+    We hope you find this guide useful, and if you have any questions you are welcome to contact us.
+
+    The purpose of this guide is not to teach assembly from scratch - but help people who know some assembly make good use of it.
+    So you should know some assembly (16 or 32 bit) to understand this guide - you can learn it from a lot of sources on the <a href="http://lmgtfy.com/?q=learn+assembly">internet</a>.
+    In this guide we will mostly learn to do cool stuff and actually build a proper win32 application with assembly.
+
+    Also, we believe that writing assembly in 2018 can teach you the art of finding how to solve your problem,
+    even when there isn't a solution on Stack Overflow (a site in which people ask questions and get answers, mostly about programming).
+    Therefore we will not give the solution to all the problems you might encounter in the journey of writing a game in assembly,
+    and we encourage you to research and try to solve those problems alone.
+    Some nice resources:
+    1. MSDN - microsoft developer network, the Windows functions that you'll use are documented pretty good there.
+    2. <a href="http://www.winprog.org/tutorial/start.html">Winprog</a> guides for using the Win32 API with C - pretty useful
+    3. <a href="http://win32assembly.programminghorizon.com/tutorials.html">Iczelion's Win32 Assembly homepage</a> This site helped us a lot
 </pre>
 <h2>Setting up the environment</h2>
 <pre>
@@ -36,12 +49,12 @@
     Now we can start writing code.
     First, you should tell the assembler a few stuff.
     <pre>
-      .486                                      ; create 32 bit code
-      .model flat, stdcall                      ; 32 bit memory model
+      .486                                      ; write 32 bit code,
+      .model flat, stdcall                      ; flat memory model, stdcall calling convention
       option casemap :none                      ; case sensitive
     </pre>
     The first line means that you are gonna use the .486 Intel standard commands.
-    The second line means that we are using 32 bit flat memory model
+    The second line means that we are using flat memory model, with stdcall calling conventions (you should read about calling conventions).
     The third line means that our code will be case sensitive which mean the variable "num" isn't the variable "Num".
 
 
@@ -100,6 +113,7 @@
     for example types windows has provided us when we included their libraries.
     For now, our data segment will look like this:
     <pre>
+        .data
         ClassName       DB      "TheClass",0
         windowTitle     DB      "A Game!",0
     </pre>
@@ -114,8 +128,9 @@
     <pre>
         .code
         main PROC
-            invoke ExitProcess, 0 ;(This is a comment.) This is a windows function that comes from our Kernel32 include.
-                                  ; The curious reader will go to MSDN and read more about this function.
+            invoke ExitProcess, 0 ; (This is a comment.) This is a windows function that comes from our Kernel32 include.
+                                  ; The curious reader will go to MSDN and read more about this function. Basically is exists the process :)
+            ret
         main ENDP
         end main
     </pre>

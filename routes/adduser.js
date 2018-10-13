@@ -46,7 +46,6 @@ function verifyRecaptcha(key, callback) {
 router.post('/', function(req, res) {
     'use strict';
     var extra = getExtra(req);
-    console.log(req.body);
     const email = req.body.email;
     const username = req.body.username;
     const password = req.body.password;

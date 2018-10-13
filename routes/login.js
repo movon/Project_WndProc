@@ -19,44 +19,49 @@ router.get('/', function (req, res) {
 
 router.post('/', function (req, res) {
     'use strict';
-    client.connect(process.env.DATABASE_URL, function(err, connection, done) {
-        if (err) {
-            res.json({"code" : 100, "status" : "Error in connection database"});
-        } else {
+    client.connect()
+        .then(() => {
             var extra = getExtra(req);
             var username = req.body.username;
             var password = req.body.password;
-            if (username.indexOf("'") > -1 || password.indexOf("'") > -1) {
-                res.render('login', {title: 'Detected SQL injection.', extra:extra, req:req});
-                return;
-            }
+            client.query("select * from users where username=$1;", [username])
+                .then(
+                    (rows) => {
+                        if (rows.rowCount === 0) {
+                            console.log("user not found");
+                            client.end();
+                            res.render('login', {title: 'Invalid username or password!', extra:extra, username:req.session.username});
+                            return;
+                        }
 
-            connection.query("select * from users where username='" + username + "';", function (err, rows) {
-                if (!err) {
-                    if (rows.rowCount === 0) {
-                        res.render('login', {title: 'Invalid username or password!', extra:extra, username:req.session.username});
-                    } else {
+                        // verify password hash
                         var salt = rows.rows[0].salt;
                         var saltpassword =  password + salt;
                         var hashedpassword = crypto.createHash('md5').update(saltpassword).digest('hex');
 
                         if (rows.rows[0].hashed !== hashedpassword) {
-                            res.render('login', {
-                                title: 'Invalid username or password!',
-                                extra: extra,
-                                username: req.session.username
-                            });
+                            console.log("password hash doesn't match given password");
+                            client.end();
+                            res.render('login', {title: 'Invalid username or password!', extra: extra, username: req.session.username});
                             return;
                         }
+
                         req.session.username = rows.rows[0].username;
                         req.session.privileges = (rows.rows[0].privileges);
+                        console.log("login successful");
+                        client.end();
                         res.redirect('/');
+                    },
+                    (err) => {
+                        console.error("failed querying users database for logging in", err, err.stack);
+                        client.end();
+                        res.render('login', {title: 'Failed querying databaase for logging in', extra: extra, username: req.session.username});
                     }
-                }
-            });
-        }
-        done();
-    });
+                );
+        }, (err) => {
+            console.error('connection errror when accessing admin panel', err.stack);
+            res.json({"code": 100, "status": "Error in connection database"});
+        });
 });
 
 module.exports = router;

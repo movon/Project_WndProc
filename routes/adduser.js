@@ -46,16 +46,20 @@ function verifyRecaptcha(key, callback) {
 router.post('/', function(req, res) {
     'use strict';
     var extra = getExtra(req);
+    console.log(req.body);
+    const email = req.body.email;
+    const username = req.body.username;
+    const password = req.body.password;
     verifyRecaptcha(req.body["g-recaptcha-response"], function(success) {
         if (success) {
             var error = '';
-            if (!validator.isEmail(req.body.email)) {
+            if (!validator.isEmail(email)) {
                 error += '<li style=\"color: red\">Invalid Email.</li>';
             }
-            if (!validator.isAlphanumeric(req.body.username)) {
+            if (!validator.isAlphanumeric(username)) {
                 error += '<li style=\"color: red\">Username should only contain letters and numbers.</li>';
             }
-            if (!validator.isAscii(req.body.password)) {
+            if (!validator.isAscii(password)) {
                 error += '<li style=\"color: red\">Password contains invalid characters.</li>';
             }
 
@@ -86,7 +90,7 @@ router.post('/', function(req, res) {
                                 }
 
                                 var salt = crypto.randomBytes(32).toString('hex');
-                                var saltpassword =  req.body.password + salt;
+                                var saltpassword =  password + salt;
                                 var hashedpassword = crypto.createHash('md5').update(saltpassword).digest('hex');
                                 connection.query("insert into users(username, hashed, email, privileges, salt) values($1,$2,$3,$4,$5);", [req.body.username, hashedpassword, req.body.email, 'user', salt])
                                     .then(

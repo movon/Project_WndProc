@@ -1,11 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var { Client } = require('pg');
-const client = new Client(
-    {
-        connectionString: process.env.DATABASE_URL
-    }
-);
+
 
 /* GET admin page. */
 router.get('/', function (req, res, next) {
@@ -16,35 +11,26 @@ router.get('/', function (req, res, next) {
         return;
     }
 
-    client.connect()
-        .then(() => {
-            connection.query("select * from users")
-                .then(
-                    (rows) => {
-                        var userTable = '<tr><td>Username</td><td>hashed</td><td>email</td><td>privileges</td><td>salt</td></tr>';
-                        for (var i = 0; i < rows.rows.length; i++) {
-                            console.log(rows.rows[i]);
-                            userTable += '<tr>';
-                            for (var key in rows.rows[i]) {
-                                userTable += '<td contenteditable>' + rows.rows[i][key] + '</td>';
-                            }
-                            userTable += '</tr>';
+        connection.query("select * from users")
+            .then(
+                (rows) => {
+                    var userTable = '<tr><td>Username</td><td>hashed</td><td>email</td><td>privileges</td><td>salt</td></tr>';
+                    for (var i = 0; i < rows.rows.length; i++) {
+                        console.log(rows.rows[i]);
+                        userTable += '<tr>';
+                        for (var key in rows.rows[i]) {
+                            userTable += '<td contenteditable>' + rows.rows[i][key] + '</td>';
                         }
-                        console.log("Admin panel retrieved");
-                        client.end();
-                        res.render('adminpanel', { title: 'Admin panel', extra:extra, username:req.session.username, userTable:userTable});
-                    },
-                    (err) => {
-                        console.error("couldn't retrieve admin panel content");
-                        client.end();
-                        res.json({"code": 100, "status": "Error fetching admin panel"});
+                        userTable += '</tr>';
                     }
-                );
-        }, (err) => {
-            console.error('connection errror when accessing admin panel', err.stack);
-            client.end();
-            res.json({"code": 100, "status": "Error in connection database"});
-        });
+                    console.log("Admin panel retrieved");
+                    res.render('adminpanel', { title: 'Admin panel', extra:extra, username:req.session.username, userTable:userTable});
+                },
+                (err) => {
+                    console.error("couldn't retrieve admin panel content");
+                    res.json({"code": 100, "status": "Error fetching admin panel"});
+                }
+            );
 });
 
 module.exports = router;

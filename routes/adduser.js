@@ -3,12 +3,6 @@ var router = express.Router();
 var validator = require('validator');
 var https = require('https');
 var crypto = require('crypto');
-var { Client } = require('pg');
-const client = new Client(
-    {
-        connectionString: process.env.DATABASE_URL
-    }
-);
 
 
 
@@ -69,58 +63,48 @@ router.post('/', function(req, res) {
                     username: req.session.username
                 });
             }
-            client.connect()
-                .then(() =>  {
-                    client.query("select * from users where username=$1;", [req.body.username])
-                        .then(
-                            (rows) => {
-                                if (rows.rows.length > 0) {
-                                    var error = '<li style=\"color: red\">Username already taken.</li>';
-                                    console.log("username already taken");
-                                    client.end();
-                                    res.render('register', {
-                                        title: 'Register',
-                                        error: error,
-                                        extra: extra,
-                                        username: req.session.username
-                                    });
-                                    return;
-                                }
+                client.query("select * from users where username=$1;", [req.body.username])
+                    .then(
+                        (rows) => {
+                            if (rows.rows.length > 0) {
+                                var error = '<li style=\"color: red\">Username already taken.</li>';
+                                console.log("username already taken");
+                                res.render('register', {
+                                    title: 'Register',
+                                    error: error,
+                                    extra: extra,
+                                    username: req.session.username
+                                });
+                                return;
+                            }
 
-                                var salt = crypto.randomBytes(32).toString('hex');
-                                var saltpassword =  password + salt;
-                                var hashedpassword = crypto.createHash('md5').update(saltpassword).digest('hex');
-                                client.query("insert into users(username, hashed, email, privileges, salt) values($1,$2,$3,$4,$5);", [req.body.username, hashedpassword, req.body.email, 'user', salt])
-                                    .then(
-                                        () => {
-                                            console.log("sent him thank you, adding user successful");
-                                            req.session.privileges = 'user';
-                                            client.end();
-                                            res.render('adduser', {
-                                                title: 'Thank you for signing up to our website!',
-                                                extra: extra,
-                                                username: req.session.username
-                                            });
-                                        }, (err) => {
-                                            console.error(err);
-                                            client.end();
-                                            res.json({"code": 100, "status": "Error in updating database"});
-                                        }
-                                    );
-                            }, (err) => {
-                                    console.error("error querying database for adding user");
-                                    client.end();
-                                    res.render('register', {
-                                        title: 'Register',
-                                        error: error,
-                                        extra: extra,
-                                        username: req.session.username
-                                    });
-                            });
-                }, (err) => {
-                    console.error('connection errror when adding user', err.stack);
-                    res.json({"code": 100, "status": "Error in connection database"});
-                });
+                            var salt = crypto.randomBytes(32).toString('hex');
+                            var saltpassword =  password + salt;
+                            var hashedpassword = crypto.createHash('md5').update(saltpassword).digest('hex');
+                            client.query("insert into users(username, hashed, email, privileges, salt) values($1,$2,$3,$4,$5);", [req.body.username, hashedpassword, req.body.email, 'user', salt])
+                                .then(
+                                    () => {
+                                        console.log("sent him thank you, adding user successful");
+                                        req.session.privileges = 'user';
+                                        res.render('adduser', {
+                                            title: 'Thank you for signing up to our website!',
+                                            extra: extra,
+                                            username: req.session.username
+                                        });
+                                    }, (err) => {
+                                        console.error(err);
+                                        res.json({"code": 100, "status": "Error in updating database"});
+                                    }
+                                );
+                        }, (err) => {
+                                console.error("error querying database for adding user");
+                                res.render('register', {
+                                    title: 'Register',
+                                    error: error,
+                                    extra: extra,
+                                    username: req.session.username
+                                });
+                        });
         } else {
             res.render('register', {
                 title: 'Register',

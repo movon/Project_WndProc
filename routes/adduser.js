@@ -29,7 +29,7 @@ function verifyRecaptcha(key, callback) {
                 console.log("Got all data from google recaptcha: " + JSON.stringify(parsedData));
                 callback(parsedData.success);
             } catch (e) {
-                console.log("Error while trying to get all data from google recaptcha");
+                console.log("Error while trying to get all data from google recaptcha, exception: " + e);
                 callback(false);
             }
         });

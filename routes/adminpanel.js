@@ -42,6 +42,7 @@ router.get('/', function (req, res, next) {
                 );
         }, (err) => {
             console.error('connection errror when accessing admin panel', err.stack);
+            client.end();
             res.json({"code": 100, "status": "Error in connection database"});
         });
 });

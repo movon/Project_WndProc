@@ -14,15 +14,14 @@
 <h1>Guide 0x1 - the message loop</h1>
 <h2>What is the messsage loop?</h2>
 <pre>
-    The message loop is the most amazing thing you can imagine. It can do anything for you.
-    Think of it as your loyal servant. Every time <b>anything</b> happens, your message loop will be informed of it.
+    The message loop is the core of your program. It runs in an infinite loop and it is what makes your program interactive.
+    Every time any meaningful event happens, your message loop will know of it.
     Then, it will send it to your window procedure (which we will talk about in the next section).
     So what is the message loop exactly? it is really similar to how it sounds. look at that!
     <pre>
     msgLoop:
-     ; PeekMessage
-    invoke GetMessage, addr msg, hWnd, 0, 0 ;Retrieve the messages from your window.
-    invoke DispatchMessage, addr msg ;Dispatches a message to the window procedure
+        invoke GetMessage, addr msg, hWnd, 0, 0 ;Retrieve the messages from your window.
+        invoke DispatchMessage, addr msg ;Dispatches a message to the window procedure
     jmp msgLoop
     </pre>
     It does 2 things, in an infinite loop(not really, The program stops when a method like ExitProcess is called inside the window proc).
@@ -36,22 +35,25 @@
     Let's call this procedure ProjectWndProc. It recieves 4 parameters:
     hWnd of type HWND, message of type UINT, wParam type WPARAM, and lParam type LPARAM.
     Let's expand on each parameter:
-        The first one is of type HWND, which means the <b>Window Handler</b>. An handle, according to msdn, is:
+        The first one is of type HWND, which means the <b>Window Handler</b>. MSDN explains what is a handle:
         <i>
             An object is a data structure that represents a system resource, such as a file, thread, or graphic image.
             An application cannot directly access object data or the system resource that an object represents.
+            Instead, an application must obtain an object handle, which it can use to examine or modify the system resource. Each handle has an entry in an internally maintained table.
         </i>
         The second one, "message", of type UINT, is the message id. There are many message IDs, they usually start with WM.
         Really useful messages are: WM_PAINT, WM_CLOSE, WM_KEYDOWN, WM_TIMER, and many, many others your can read about <a style="color: darkred" href="https://wiki.winehq.org/List_Of_Windows_Messages">here</a>.
 
         wParam and lParam are parameters that come with some of the messages, that specify additional information about the event.
-        For exmaple, in mouse clicks, they will contain the location the click occured.
+        For example, on mouse clicks event , they will contain the location the click occured.
     Then, inside of our procedure, we will check which message we got, and act accordingly.
 </pre>
-<h3>Example of message loop
+<h3>
+    Example of message loop
     If you will run this message loop, you should see a blank screen.
     This is the first time we have a running program with a window that opens.
-    That is impressive!</h3>
+    That is impressive!
+</h3>
 <pre>
 ProjectWndProc	PROC,	hWnd:HWND, message:UINT, wParam:WPARAM, lParam:LPARAM
 	local paint:PAINTSTRUCT
@@ -67,9 +69,10 @@ ProjectWndProc	PROC,	hWnd:HWND, message:UINT, wParam:WPARAM, lParam:LPARAM
 
 	closing:
 	invoke ExitProcess, 0
+    ret
 
 	timing:
-	invoke InvalidateRect, hWnd, NULL, TRUE
+	invoke InvalidateRect, hWnd, NULL, TRUE ; Will send WM_PAINT to window to redraw it
 	ret
 OtherInstances:
 	invoke DefWindowProc, hWnd, message, wParam, lParam
@@ -85,29 +88,30 @@ ProjectWndProc	ENDP
     This one is going to be a bit complex, so listen carefully and for any function you do not understand search in MSDN.
     <pre>
     main PROC
-    LOCAL wndcls:WNDCLASSA ; Class struct for the window
-    LOCAL hWnd:HWND ;Handle to the window
-    LOCAL msg:MSG
-    invoke RtlZeroMemory, addr wndcls, SIZEOF wndcls ;Empty the window class, clean memory
-    mov eax, offset ClassName
-    mov wndcls.lpszClassName, eax ;Set the class name
-    invoke GetStockObject, BLACK_BRUSH
-    mov wndcls.hbrBackground, eax ;Set the background color as black
-    mov eax, ProjectWndProc
-    mov wndcls.lpfnWndProc, eax ;Set the procedure that handles the window messages
-    invoke RegisterClassA, addr wndcls ;Register the class
-    invoke CreateWindowExA, WS_EX_COMPOSITED, addr ClassName, addr windowTitle, WS_SYSMENU, 100, 100, WINDOW_WIDTH, WINDOW_HEIGHT, 0, 0, 0, 0 ;Create the window
-    mov hWnd, eax ;Save the handle
-    invoke ShowWindow, eax, SW_SHOW ;Show it
-    invoke SetTimer, hWnd, MAIN_TIMER_ID, 20, NULL ;Set the repaint timer
+        LOCAL wndcls:WNDCLASSA ; Class struct for the window
+        LOCAL hWnd:HWND ;Handle to the window
+        LOCAL msg:MSG ; The message that we dispatch to the window
+        invoke RtlZeroMemory, addr wndcls, SIZEOF wndcls ;Empty the window class, clean memory
+        mov eax, offset ClassName
+        mov wndcls.lpszClassName, eax ;Set the class name
+        invoke GetStockObject, BLACK_BRUSH
+        mov wndcls.hbrBackground, eax ;Set the background color as black
+        mov eax, ProjectWndProc
+        mov wndcls.lpfnWndProc, eax ;Set the procedure that handles the window messages
+        invoke RegisterClassA, addr wndcls ;Register the class
+        invoke CreateWindowExA, WS_EX_COMPOSITED, addr ClassName, addr windowTitle, WS_SYSMENU, 100, 100, WINDOW_WIDTH, WINDOW_HEIGHT, 0, 0, 0, 0 ;Create the window
+        mov hWnd, eax ;Save the handle
+        invoke ShowWindow, eax, SW_SHOW ;Show the window
+        invoke SetTimer, hWnd, MAIN_TIMER_ID, 20, NULL ;Set the repaint timer
 
-    msgLoop:
-    ; PeekMessage
-        invoke GetMessage, addr msg, hWnd, 0, 0 ;Retrieve the messages from the window
-        invoke DispatchMessage, addr msg ;Dispatches a message to the window procedure
-    jmp msgLoop
+        msgLoop:
+        ; PeekMessage
+            invoke GetMessage, addr msg, hWnd, 0, 0 ;Retrieve the messages from the window
+            invoke DispatchMessage, addr msg ;Dispatches a message to the window procedure
+        jmp msgLoop
 
-    invoke ExitProcess, 1
+        invoke ExitProcess, 1
+        ret
     main ENDP
     </pre>
 

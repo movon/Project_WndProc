@@ -44,6 +44,7 @@ function verifyRecaptcha(key, callback) {
 //Handle POST request to sign up
 router.post('/', function(req, res) {
     'use strict';
+    console.log(process.env);
     var extra = getExtra(req);
     const email = req.body.email;
     const username = req.body.username;

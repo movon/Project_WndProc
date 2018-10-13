@@ -1,5 +1,5 @@
 var express = require('express');
-var pg = require('pg');
+var { Client } = require('pg');
 var router = express.Router();
 
 /* GET admin page. */
@@ -11,7 +11,7 @@ router.get('/', function (req, res, next) {
         return;
     }
 
-    pg.connect(process.env.DATABASE_URL, function(err, connection, done) {
+    Client.connect(process.env.DATABASE_URL, function(err, connection, done) {
         if (err) {
             res.json({"code" : 100, "status" : "Error in connection database"});
         } else {

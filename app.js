@@ -16,6 +16,8 @@ var logout = require('./routes/logout');
 var adminpanel = require('./routes/adminpanel');
 var userpanel = require('./routes/userpanel');
 var changepassword = require('./routes/changepassword');
+var { Client } = require('pg');
+client = new Client({ connectionString: process.env.DATABASE_URL});
 var app = express();
 
 
@@ -79,6 +81,19 @@ app.use(function (req, res) {
     res.render('notfound404', { title: 'Not Found', req: req, extra: extra, username: req.session.username});
 });
 
+console.log("creating users if doesn't exist");
+client.connect();
+client.query("select * from users limit 1;").then((row) => {
+    console.log("users table exists");
+}, (err) => {
+    console.log("users table does not exist");
+    client.query("create table users (user_id serial PRIMARY KEY, username VARCHAR(50) UNIQUE NOT NULL, hashed VARCHAR(50) NOT NULL, email VARCHAR(355), salt VARCHAR(100) NOT NULL, privileges VARCHAR(50) NOT NULL);")
+        .then(() => {
+            console.log("table was created correctly");
+        }, (err) => {
+            console.error("table was NOT created correctly", err, err.stack);
+    });
+});
 // error handlers
 /*
 // development error handler

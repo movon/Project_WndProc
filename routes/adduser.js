@@ -3,13 +3,6 @@ var router = express.Router();
 var validator = require('validator');
 var https = require('https');
 var crypto = require('crypto');
-var { Client } = require('pg');
-const client = new Client(
-    {
-        host: process.env.DATABASE_URL,
-        port: 5334
-    }
-);
 
 
 
@@ -35,7 +28,7 @@ function verifyRecaptcha(key, callback) {
                 console.log("Got all data from google recaptcha: " + JSON.stringify(parsedData));
                 callback(parsedData.success);
             } catch (e) {
-                console.log("Error while trying to get all data from google recaptcha, exception: " + e);
+                console.log("Error while trying to get all data from google recaptcha, exception: " + e, e.stack);
                 callback(false);
             }
         });
@@ -46,72 +39,85 @@ function verifyRecaptcha(key, callback) {
 router.post('/', function(req, res) {
     'use strict';
     var extra = getExtra(req);
+    const email = req.body.email;
+    const username = req.body.username;
+    const password = req.body.password;
     verifyRecaptcha(req.body["g-recaptcha-response"], function(success) {
         if (success) {
-            client.connect(process.env.DATABASE_URL, function (err, connection, done) {
-                if (err) {
-                    done();
-                    res.json({"code": 100, "status": "Error in connection database"});
-                } else {
-                    var error = '';
-                    if (!validator.isEmail(req.body.email)) {
-                        error += '<li style=\"color: red\">Invalid Email.</li>';
-                    }
-                    if (!validator.isAlphanumeric(req.body.username)) {
-                        error += '<li style=\"color: red\">Username should only contain letters and numbers.</li>';
-                    }
-                    if (!validator.isAscii(req.body.password)) {
-                        error += '<li style=\"color: red\">Password contains invalid characters.</li>';
-                    }
-                    connection.query("select * from users where username='" + req.body.username + "';", function (err, rows) {
-                        if (rows.rows.length > 0) {
-                            error += '<li style=\"color: red\">Username already taken.</li>';
-                        }
-                        if (error.length > 0) {
-                            res.render('register', {
-                                title: 'Register',
-                                error: error,
-                                extra: extra,
-                                username: req.session.username
-                            });
-                            return;
-                        }
-                        var salt = crypto.randomBytes(32).toString('hex');
-                        var saltpassword =  req.body.password + salt;
-                        var hashedpassword = crypto.createHash('md5').update(saltpassword).digest('hex');
-                        console.log("insert into users(username, hashed, email, privileges, salt) values('" + req.body.username + "','" + hashedpassword + "','" + req.body.email + "'," + "'user','" + salt + "');");
-                        connection.query("insert into users(username, hashed, email, privileges, salt) values('" + req.body.username + "','" + hashedpassword + "','" + req.body.email + "'," + "'user','" + salt + "');", function (err, rows) {
-                            console.log("released connection");
-                            if (!err) {
-                                console.log("sent him thank you");
-                                res.render('adduser', {
-                                    title: 'Thank you for signing up to our website!',
-                                    extra: extra,
-                                    username: req.session.username
-                                });
-                            } else {
-                                console.log(err);
-                            }
-                        });
+            var error = '';
+            if (!validator.isEmail(email)) {
+                error += '<li style=\"color: red\">Invalid Email.</li>';
+            }
+            if (!validator.isAlphanumeric(username)) {
+                error += '<li style=\"color: red\">Username should only contain letters and numbers.</li>';
+            }
+            if (!validator.isAscii(password)) {
+                error += '<li style=\"color: red\">Password contains invalid characters.</li>';
+            }
 
-                    });
-                }
-            });
-        } else {
+            if(error) {
                 res.render('register', {
                     title: 'Register',
-                    error: '<li style=\"color: red\">Recaptcha failed.</li>',
+                    error: error,
                     extra: extra,
                     username: req.session.username
                 });
-                console.log('Recaptcha failed for ')
             }
-        });
+                client.query("select * from users where username=$1;", [req.body.username])
+                    .then(
+                        (rows) => {
+                            if (rows.rows.length > 0) {
+                                var error = '<li style=\"color: red\">Username already taken.</li>';
+                                console.log("username already taken");
+                                res.render('register', {
+                                    title: 'Register',
+                                    error: error,
+                                    extra: extra,
+                                    username: req.session.username
+                                });
+                                return;
+                            }
 
-
+                            var salt = crypto.randomBytes(32).toString('hex');
+                            var saltpassword =  password + salt;
+                            var hashedpassword = crypto.createHash('md5').update(saltpassword).digest('hex');
+                            client.query("insert into users(username, hashed, email, privileges, salt) values($1,$2,$3,$4,$5);", [req.body.username, hashedpassword, req.body.email, 'user', salt])
+                                .then(
+                                    () => {
+                                        console.log("sent him thank you, adding user successful");
+                                        req.session.privileges = 'user';
+                                        res.render('adduser', {
+                                            title: 'Thank you for signing up to our website!',
+                                            extra: extra,
+                                            username: req.session.username
+                                        });
+                                    }, (err) => {
+                                        console.error(err);
+                                        res.json({"code": 100, "status": "Error in updating database"});
+                                    }
+                                );
+                        }, (err) => {
+                                console.error("error querying database for adding user");
+                                res.render('register', {
+                                    title: 'Register',
+                                    error: error,
+                                    extra: extra,
+                                    username: req.session.username
+                                });
+                        });
+        } else {
+            res.render('register', {
+                title: 'Register',
+                error: '<li style=\"color: red\">Recaptcha failed.</li>',
+                extra: extra,
+                username: req.session.username
+            });
+            console.log('Recaptcha failed for ');
+        }
     });
 
 
+});
 
 
 module.exports = router;

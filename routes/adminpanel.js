@@ -1,12 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var { Client } = require('pg');
-const client = new Client(
-    {
-        host: process.env.DATABASE_URL,
-        port: 5334
-    }
-);
+
 
 /* GET admin page. */
 router.get('/', function (req, res, next) {
@@ -17,12 +11,9 @@ router.get('/', function (req, res, next) {
         return;
     }
 
-    client.connect(process.env.DATABASE_URL, function(err, connection, done) {
-        if (err) {
-            res.json({"code" : 100, "status" : "Error in connection database"});
-        } else {
-            connection.query("select * from users", function (err, rows) {
-                if (!err) {
+        connection.query("select * from users")
+            .then(
+                (rows) => {
                     var userTable = '<tr><td>Username</td><td>hashed</td><td>email</td><td>privileges</td><td>salt</td></tr>';
                     for (var i = 0; i < rows.rows.length; i++) {
                         console.log(rows.rows[i]);
@@ -32,12 +23,14 @@ router.get('/', function (req, res, next) {
                         }
                         userTable += '</tr>';
                     }
+                    console.log("Admin panel retrieved");
                     res.render('adminpanel', { title: 'Admin panel', extra:extra, username:req.session.username, userTable:userTable});
+                },
+                (err) => {
+                    console.error("couldn't retrieve admin panel content");
+                    res.json({"code": 100, "status": "Error fetching admin panel"});
                 }
-            });
-        }
-        done();
-    });
+            );
 });
 
 module.exports = router;

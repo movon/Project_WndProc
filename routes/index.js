@@ -5,6 +5,6 @@ var router = express.Router();
 router.get('/', function (req, res) {
     'use strict';
     var extra = getExtra(req);
-    res.render('index', { title: 'ProjectWndProc', extra: extra, username: req.session.username });
+    res.render('index', { title: 'AsmDev', extra: extra, username: req.session.username });
 });
 module.exports = router;

@@ -65,26 +65,14 @@
             include \masm32\include\kernel32.inc
             include \masm32\include\user32.inc
             include \masm32\include\gdi32.inc
-            include \masm32\include\Advapi32.inc
-            include \masm32\include\winmm.inc
-            include \masm32\include\dialogs.inc       ; macro file for dialogs
-            include \masm32\macros\macros.asm         ; masm32 macro file
-            includelib \masm32\lib\winmm.lib
             includelib \masm32\lib\gdi32.lib
             includelib \masm32\lib\user32.lib
             includelib \masm32\lib\kernel32.lib
-            includelib \masm32\lib\Comctl32.lib
-            includelib \masm32\lib\comdlg32.lib
-            includelib \masm32\lib\shell32.lib
-            includelib \masm32\lib\oleaut32.lib
-            includelib \masm32\lib\ole32.lib
-            includelib \masm32\lib\msvcrt.lib
     </pre>
     If you read what you just copied, you noticed that for each library, there are:
         1. inc file: The curious reader who will open them will find tons of definitions for constants and functions. This file is included as a sort of a header using the "include" command.
         2. lib file: This file is full of binary shit. Don't even try to read it. Basically its just machine code which relates to the header file.
-    Most of those libraries are mandatory for you to start working, as there are many cool functions in all of them which we will use later.
-    A task for you guys at home will be to find out which libraries are not necessary for your project. If you do, comment them out using the ";" sign since you might need them later on.
+    Most of those libraries are mandatory for you to start working, as there are many essential functions in all of them which we will use later.
 </pre>
 <h2>The segments</h2>
 <pre>
